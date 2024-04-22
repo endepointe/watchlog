@@ -10,6 +10,7 @@ use tokio::signal::unix::{signal, SignalKind};
 use tokio::sync::mpsc;
 use tokio::task;
 
+
 #[derive(Debug)]
 struct Count {
     value: u32,
@@ -126,7 +127,6 @@ async fn main() {
 
     tokio::join!(one, two);
 }
-
 
 // Test the memory consumption of the running program over a 1 minute period.
 mod tests {
