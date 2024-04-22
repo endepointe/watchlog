@@ -57,7 +57,7 @@ async fn handle_client(mut sockstream: tokio::net::UnixStream, db_path: PathBuf)
     match msg.trim() {
         "start_logging" => {
             println!("Starting logging...");
-            let log_path = Path::new("test1.log"); 
+            let log_path = Path::new("/var/log/logminer/crontest.log"); 
             start_collection(log_path.to_path_buf(), db_path).await?;
             println!("Logging started");
             sockstream.write_all(b"Logging started").await?;
