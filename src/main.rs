@@ -119,13 +119,26 @@ async fn main() {
     //let pid = std::process::id();
     //println!("Process ID: {}", pid);
 
-    let data = Arc::new(Mutex::new(Database::new()));
-    let count = Arc::new(Mutex::new(Count::new()));
-    let (tx, rx) = mpsc::unbounded_channel::<u32>();
-    let one = listen_for_add_signal(data.clone());
-    let two = listen_for_menu_signal(count.clone());
+    // A list, could be a vector, collection, should maintain a list of log 
+    // collection tasks. Each task should continue to run while in the 
+    // background.
+    //
+    // There should be a sink/bucket/collection pool that recieves the output
+    // and prepares the data to be sent to a long-term storage solution.
+   
+    // decide whether using a Rc or Arc will be suitable for controlling 
+    // ownership of a log reading and collection stream.
+    
+    let rc_file = std::fs::File::options().append(true).create(true).open("newfile.txt");
+    writeln!(rc_file., b"writethis data to file");
 
-    tokio::join!(one, two);
+    //let data = Arc::new(Mutex::new(Database::new()));
+    //let count = Arc::new(Mutex::new(Count::new()));
+    //let (tx, rx) = mpsc::unbounded_channel::<u32>();
+    //let one = listen_for_add_signal(data.clone());
+    //let two = listen_for_menu_signal(count.clone());
+
+    //tokio::join!(one, two);
 }
 
 // Test the memory consumption of the running program over a 1 minute period.
