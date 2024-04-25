@@ -6,10 +6,10 @@ use std::fs::{File, OpenOptions};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use std::thread;
 use tokio::signal::unix::{signal, SignalKind};
 use tokio::sync::mpsc;
 use tokio::task;
-
 
 #[derive(Debug)]
 struct Count {
@@ -107,6 +107,35 @@ async fn listen_for_menu_signal(func: Arc<Mutex<Count>>) {
     });
 }
 
+fn running_task(terminate_flag: Arc<Mutex<bool>>) {
+    let arc_file = Arc::new(std::fs::File::options().append(true).create(true).open("newfile.txt").unwrap());
+    
+    loop {
+        //println!("perform some work...");
+        let mut arc_file_clone = Arc::clone(&arc_file);
+        arc_file_clone.write_all(b"perform some work\n");
+
+        thread::sleep(Duration::from_secs(1));
+
+        if *terminate_flag.lock().unwrap() {
+            //println!("Task terminated.");
+            arc_file_clone.write_all(b"terminating task\n");
+            return;
+        }
+    }
+}
+
+fn start_running_task() -> Arc<Mutex<bool>> {
+    let terminate_flag = Arc::new(Mutex::new(false));
+    let terminate_flag_clone = terminate_flag.clone();
+
+    thread::spawn(move || {
+        running_task(terminate_flag_clone);
+    });
+
+    terminate_flag
+}
+
 #[tokio::main]
 async fn main() {
     //let mut f = OpenOptions::new().append(true).open("input.log")?;
@@ -123,22 +152,42 @@ async fn main() {
     // collection tasks. Each task should continue to run while in the 
     // background.
     //
+    // src_list: [src_0, src_1, ..., src_n]
+    // dst_list: [dst_0, dst_1, ..., dst_n]
+    
     // There should be a sink/bucket/collection pool that recieves the output
     // and prepares the data to be sent to a long-term storage solution.
    
     // decide whether using a Rc or Arc will be suitable for controlling 
     // ownership of a log reading and collection stream.
-    
-    let rc_file = std::fs::File::options().append(true).create(true).open("newfile.txt");
-    writeln!(rc_file., b"writethis data to file");
+    // | src_0 | ---> | dst_0 | 
+    // | src_1 | ---> | dst_1 | 
+    // | src_2 | ---> | dst_2 | 
+    //
+    println!("Starting running task...");
+    let terminate_flag = start_running_task();
 
+    // user can press enter to terminate the task. This may be replaced by a signal
+    // now that I think of it.
+    println!("Press Enter to terminate the task...");
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).expect("Failed to read line");
+
+    *terminate_flag.lock().unwrap() = true;
+
+    // terminate task gracefully
+    thread::sleep(Duration::from_secs(2));
+
+    println!("Main function terminated.");
+
+    // learning how signals work (rough and dirty)
     //let data = Arc::new(Mutex::new(Database::new()));
     //let count = Arc::new(Mutex::new(Count::new()));
     //let (tx, rx) = mpsc::unbounded_channel::<u32>();
     //let one = listen_for_add_signal(data.clone());
     //let two = listen_for_menu_signal(count.clone());
-
     //tokio::join!(one, two);
+    
 }
 
 // Test the memory consumption of the running program over a 1 minute period.
