@@ -1,40 +1,60 @@
 use std::io::{self, Write};
 use std::path::Path;
-use tokio::io::AsyncWriteExt;
-use tokio::net::UnixStream;
+use std::process::{Command, Stdio};
+use std::time::Duration;
 
-#[tokio::main]
-async fn main() -> io::Result<()> {
-    let socket_path = "./socket.sock";
-
-    loop {
-        println!("Menu:");
-        println!("1. Start logs");
-        println!("2. Stop logs");
-        println!("3. Terminate server");
-        println!("4. Close menu");
-
-        print!("Enter your choice: ");
-        io::stdout().flush().unwrap();
-
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
-
-        match input.trim() {
-            "1" => send_command(&socket_path, "start_logging").await?,
-            "2" => send_command(&socket_path, "stop_logging").await?,
-            "3" => send_command(&socket_path, "terminate_server").await?,
-            "4" => break,
-            _ => println!("Invalid choice"),
-        }
-    }
-
-    Ok(())
+fn get_pid() -> io::Result<u32> {
+    let output = Command::new("ps")
+        .arg("-C")
+        .arg("watch-log")
+        .arg("-o")
+        .arg("pid=")
+        .output()?;
+    let pid = String::from_utf8_lossy(&output.stdout).trim().parse().unwrap();
+    Ok(pid)
 }
 
-async fn send_command(socket_path: &str, command: &str) -> io::Result<()> {
-    let mut stream = UnixStream::connect(socket_path).await?;
-    stream.write_all(command.as_bytes()).await?;
-    println!("Command '{}' sent.", command);
+fn main() -> io::Result<()> {
+    loop {
+        println!("1. send sigquit to watch-log");
+        println!("2. send sigusr1 to watch-log");
+        println!("3. send sigusr2 to watch-log");
+        println!("4. exit");
+
+        print!("Enter your choice: ");
+        io::stdout().flush()?;
+        let mut input = String::new();
+
+        io::stdin().read_line(&mut input)?;
+
+        match input.trim() {
+            "1" => {
+                let pid = get_pid()?;
+                let output = Command::new("kill")
+                    .arg("-SIGQUIT")
+                    .arg(pid.to_string())
+                    .output()?;
+                println!("{}", String::from_utf8_lossy(&output.stdout));
+            }
+            "2" => {
+                let pid = get_pid()?;
+                let output = Command::new("kill")
+                    .arg("-SIGUSR1")
+                    .arg(pid.to_string())
+                    .output()?;
+                println!("{}", String::from_utf8_lossy(&output.stdout));
+            }
+            "3" => {
+                let pid = get_pid()?;
+                let output = Command::new("kill")
+                    .arg("-SIGUSR2")
+                    .arg(pid.to_string())
+                    .output()?;
+                println!("{}", String::from_utf8_lossy(&output.stdout));
+            }
+            "4" => break,
+            _ => println!("Invalid input"),
+        }
+    }
     Ok(())
 }
