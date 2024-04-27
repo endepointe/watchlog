@@ -8,12 +8,7 @@ edition = "2021"
 [dependencies]
 signal-hook = "0.3.17"
 
-
 [[bin]]
-name = "server"
-path = "src/server.rs"
-
-[[bin]]
-name = "client"
-path = "src/client.rs"
+name = "manager"
+path = "src/watch-log-manager.rs"
 
