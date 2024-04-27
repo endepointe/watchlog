@@ -10,7 +10,7 @@
 \large Watch-Log}
 \author{Alvin Johns\\
 CS463\\
-Date: April 21, 2024}
+Date: April 26, 2024}
 \date{}
 
 \begin{document}
@@ -19,42 +19,44 @@ Date: April 21, 2024}
 
 \section*{Individual Tasks}
 \subsection*{Completed (in the last seven days)}
-\begin{itemize}[label={--}]
-    \item Self:
-        \begin{itemize}[label={}]
-            \item Made improvements to the client and server domain sockets. The server is now able to read consecutive message commands from the client.
-        \end{itemize}
+This week had a major success. Using a simplified approach to reading multiple
+file sources as spawned background tasks, a manager is now able to control the
+watch-log binary using signals.
+
+At first, I thought using the tokio library would be needed but apparently this
+library provides little, if any, benefit when the handling multiple files. It was
+recommended to use std lib threads and signal-hook.
+\begin{itemize}
+    \item Removed socket approach
+    \item Using signals and threads
 \end{itemize}
 
 \subsection*{Planned (for the next progress report)}
-\begin{itemize}[label={--}]
-    \item Self:
-        \begin{itemize}[label={}]
-            \item Use toml config file
-            \item Parse toml config file, setting the default sources on server startup.
-            \item Pipe the new data from each log to the mimicked database. 
-        \end{itemize}
+\begin{itemize}
+    \item Parse toml config file, setting the default sources on server startup.
+        (easy, should be done by this weekend).
+    \item Write appropriate tests and continue to move fast.
+    \item Write documentation now that there is a working solution.
 \end{itemize}
 
 \subsection*{Links to Issues or Pull Requests}
-\begin{itemize}[label={--}]
+\begin{itemize}
     \item main: \url{https://github.com/endepointe/watch-log}
 \end{itemize}
 
-\section*{Meeting Minutes}
-\begin{itemize}[label={--}]
-    \item
-\end{itemize}
-
 \section*{Open Questions, Concerns, or Blockers}
-\begin{itemize}[label={--}]
-    \item Is this correct?
-    \item Is "if it works, it works" good enough?""
+\begin{itemize}
+    \item Windows implementation has to be set off. This is a signals issue and
+        will probably require a completely new codebase to run when windows is
+        detected. 
 \end{itemize}
 
 \section*{Major Changes in Assets this Week}
-\begin{itemize}[label={--}]
-    \item  
+\begin{itemize}
+    \item Removed tokio.
+    \item Not using sockets.
+    \item Added a manager menu (client binary) that controls the watch-log with
+        signals.
 \end{itemize}
 
 %\section*{Additional Documents TODO}

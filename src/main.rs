@@ -49,7 +49,7 @@ impl App {
 
         // TODO: Move the running task functionality here.
         //if count == 2 {
-        lop {
+        loop {
             println!("Loop running that listens for signals ...");
             thread::sleep(Duration::from_secs(1));
         }
@@ -118,7 +118,6 @@ fn main() {
     signal_hook::flag::register(signal_hook::consts::SIGUSR2, Arc::clone(&sigusr2));
 
     loop {
-
         println!("Main function running ...");
 
         if sigquit.load(Ordering::Relaxed) {
