@@ -3,6 +3,8 @@ System Event Management Software should allow users to capture system and applic
 
 
 ### Systemd Unit File:
+To make changes to the default systemd unit file, make a copy of the `/etc/systemd/system/watch-log.service` file. The following is an example of the default systemd unit file for a service that runs the watch-log service:
+
 ```bash
 [Unit]
 Description=Watch-Log Service
