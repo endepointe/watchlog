@@ -1,5 +1,6 @@
 #!/bin/bash
 # Encrypts and compresses a list of files with a given extension: .tex
+rm *.aux *.log *.out *.pdf
 
 files=$(ls *$1)
 read -sp "Enter password: " password
