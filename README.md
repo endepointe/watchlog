@@ -27,7 +27,6 @@ systemctl status watch-log.service
 
 Good to go.
 
-```bash
 
 Systemd Unit File:
 
