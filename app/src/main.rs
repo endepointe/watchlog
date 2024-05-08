@@ -123,11 +123,30 @@ fn main() {
 mod tests {
     #[test]
     fn test_memory_consumption() {
-        let mut child = Command::new("cargo")
-            .arg("run")
-            .output()
-            .expect("Failed to start the process");
-        let output = child.stdout;
-        println!("{:?}", output);
+        println!("tests memory consumption");
+    }
+
+    #[test]
+    fn test_parse_yaml() {
+        use toml;
+        use serde_derive::{Deserialize,Serialize};
+        use std::io::Read;
+
+        #[derive(Debug,Deserialize)]
+        struct Config {
+            title: String,
+            owner: Owner,
+        }
+
+        #[derive(Debug,Deserialize)]
+        struct Owner {
+            name: String,
+        }
+
+        let mut file = std::fs::File::open("config.toml").unwrap();
+        let mut buffer = String::new();
+        file.read_to_string(&mut buffer).unwrap();
+        let config : Config = toml::from_str(&buffer).unwrap();
+        println!("{:?}",config);
     }
 }
