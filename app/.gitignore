@@ -1,0 +1,7 @@
+/target
+*.aux
+*.log
+*.out
+*.toc
+*.dvi
+report3.pdf
