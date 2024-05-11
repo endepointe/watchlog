@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Data Types(#data-types)]
+- [Data Types](#data-types)
 
 
 ### Data Types
