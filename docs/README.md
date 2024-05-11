@@ -3,9 +3,12 @@
 # Documentation
 
 ## Table of Contents
-
+- [Architecture](#architecture)
 - [Configuration](#configuration)
 - [Data Types](#data-types)
+
+### Architecture
+
 
 ### Configuration
 To make changed to the uystemd Unit File:
