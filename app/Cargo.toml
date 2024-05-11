@@ -12,6 +12,10 @@ signal-hook = "0.3.17"
 toml = "0.8.12"
 
 [[bin]]
-name = "manager"
-path = "src/watch-log-manager.rs"
+name = "server"
+path = "src/server.rs"
+
+[[bin]]
+name = "client"
+path = "src/client.rs"
 
