@@ -61,13 +61,13 @@ struct Destination {
 | tx_interval: &str |
 
 <table>
-  <tr>
-    <td>Status</td>
-    <td>Response</td>
-  </tr>
-  <tr>
-    <td>200</td>
-    <td>
+<tr>
+<td>Status</td>
+<td>Response</td>
+</tr>
+<tr>
+<td>200</td>
+<td>
 
 ```rust
 
@@ -81,13 +81,13 @@ struct Log {
 
 ```
 
-    </td>
-  </tr>
-  <tr>
-    <td>400</td>
-    <td>
-      **Markdown** _here_. <!-- Blank lines above and below! -->
-    </td>
-  </tr>
+</td>
+</tr>
+<tr>
+<td>400</td>
+<td>
+  **Markdown** _here_. <!-- Blank lines above and below! -->
+</td>
+</tr>
 </table>
 
