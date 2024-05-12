@@ -79,7 +79,6 @@ struct Log {
    tx_interval: &str,
 }
 ```
-
     </td>
   </tr>
   <tr>
