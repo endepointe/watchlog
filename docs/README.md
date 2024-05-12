@@ -37,8 +37,6 @@ WantedBy=multi-user.target
 <td>Config</td>
 <td>Defaults</td>
 <td>Log</td>
-<td>Source</td>
-<td>Destination</td>
 </tr>
 <tr>
 <td>
@@ -72,26 +70,6 @@ struct Log {
    compression_level: Option<u8>,
    key: Option<PathBuf>,
    tx_interval: Option<String>,}
-```
-</td>
-<td>
-
-```rust
-
-struct Source {
-    name: String,
-    path: PathBuf,
-}
-```
-</td>
-<td>
-
-```rust
-
-struct Destination {
-    address: IpV4Addr or IpV6Addr,
-    port: u16,
-}
 ```
 </td>
 </tr>
