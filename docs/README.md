@@ -82,7 +82,7 @@ struct Destination {
 Testing if a flowchart can be made quickly in markdown.
 
 ```mermaid
-graph TD;
+graph LR;
     ReadLogs-->StartWatcher;
     StartWatcher"-->Send_to_Encryptor;
     SendtoEncryptor-->SendtoCompressor;
