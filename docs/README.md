@@ -70,7 +70,7 @@ struct Source {
 ```rust
 
 struct Destination {
-    address: IpV4Addr \| IpV6Addr,
+    address: IpV4Addr or IpV6Addr,
     port: u16,
 }
 
