@@ -32,33 +32,23 @@ WantedBy=multi-user.target
 
 ### Data Types
 ![Data Types](./data-types.png)
-<div style="display: flex;">
-    <div style="flex: 1; padding: 10px;">
-        ```rust
-        struct Log {
-           src: Source,
-           dst: Destination,
-           compression_level: u8,
-           key: Path,
-           tx_interval: &str,
-        }
-        ```
-    </div>
-    <div style="flex: 1; padding: 10px;">
-        ```rust
-        struct Source {
-            name: &str,
-            path: Path,
-        }
-        ```
-    </div>
-    <div style="flex: 1; padding: 10px;">
-         ```rust
-        struct Destination {
-            address: IpV4Addr | IpV6Addr,
-            port: u16,
-        }
-        ```       
-    </div>
-</div
+|   ```rust
+    struct Log {
+       src: Source,
+       dst: Destination,
+       compression_level: u8,
+       key: Path,
+       tx_interval: &str,
+    }
+    ``` |   ```rust
+            struct Source {
+                name: &str,
+                path: Path,
+            }
+            ``` |   ```rust
+                    struct Destination {
+                        address: IpV4Addr | IpV6Addr,
+                        port: u16,
+                    }
+                    ``` |
 
