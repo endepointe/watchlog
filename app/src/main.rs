@@ -12,7 +12,8 @@ use std::process::{Command, Stdio};
 use serde::Deserialize;
 
 #[derive(Debug,Deserialize)]
-struct Source {
+struct 
+Source {
     name: String,
     path: PathBuf
 }
@@ -20,7 +21,8 @@ struct Source {
 /* Use ipv4 for now. In the future, detect the type of address.
  */
 #[derive(Debug,Deserialize)]
-struct Destination {
+struct 
+Destination {
     address: Ipv4Addr,
     port: u16
 }
@@ -35,21 +37,24 @@ struct Log {
 }
 
 #[derive(Debug, Deserialize)]
-struct Defaults {
-    compression_level: Option<u8>,
-    key: Option<PathBuf>,
-    tx_interval: Option<String>,
+struct 
+Defaults {
+    compression_level: u8,
+    key: PathBuf,
+    tx_interval: String,
 }
 
 #[derive(Debug, Deserialize)]
-struct Config {
+struct 
+Config {
     logs: Vec<Log>,
     defaults: Defaults,
 }
 
 struct App;
 
-impl App {
+impl 
+App {
     fn run_background(terminate_flag: Arc<Mutex<bool>>) -> Arc<Mutex<bool>>{
         let file_paths = vec![
             "log1.txt",
@@ -94,7 +99,18 @@ impl App {
     }
 }
 
-fn start_watcher() -> Arc<Mutex<bool>> {
+fn 
+read_config() -> Config {
+    let mut file = std::fs::File::open("config.json").unwrap();
+    let mut buffer = String::new();
+    file.read_to_string(&mut buffer).unwrap();
+    let config : Config = serde_json::from_str(&buffer).unwrap();
+
+    config
+}
+
+fn 
+start_watcher(logs: Vec<Log>) -> Arc<Mutex<bool>> {
     let terminate_flag = Arc::new(Mutex::new(false));
     let terminate_flag_clone = terminate_flag.clone();
 
@@ -105,17 +121,11 @@ fn start_watcher() -> Arc<Mutex<bool>> {
     terminate_flag
 }
 
-fn read_config() {
-    let mut file = std::fs::File::open("config.json").unwrap();
-    let mut buffer = String::new();
-    file.read_to_string(&mut buffer).unwrap();
-    let config : Config = serde_json::from_str(&buffer).unwrap();
-    println!("{:?}",config);
-}
 
-fn main() {
-
-    let terminate_flag = start_watcher();
+fn 
+main() {
+    let config : Config = read_config();
+    let terminate_flag = start_watcher(config.logs);
     io::stdout().flush().unwrap();  
     println!("{}",std::process::id());
 
@@ -165,8 +175,18 @@ mod tests {
     }
 
     #[test]
-    fn test_config() {
-        use crate::read_config;
-        read_config();
+    fn test_read_config() {
+        use crate::{Config, read_config};
+        let config : Config = read_config();
+        println!("{:?}", config);
+    }
+
+    #[test]
+    fn test_start_watcher() {
+        use crate::{Config, read_config,start_watcher};
+        let config : Config = read_config();
+        println!("{:?}", config);
+        let terminate_flag = start_watcher(config.logs);
+        println!("{:?}", terminate_flag);
     }
 }

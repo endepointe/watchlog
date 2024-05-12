@@ -1,5 +1,9 @@
 {
-
+    "defaults": {
+        "compression_level": 5,
+        "key": "/path/to/key",
+        "tx_interval": "hourly"
+    },
     "logs" : [
         {
             "source": {
@@ -13,11 +17,19 @@
             "compression_level": 5,
             "key": "/path/to/key",
             "tx_interval": "hourly"           
+        },
+        {
+            "source": {
+                "name": "test2.log",
+                "path": "./test2.log"
+            },
+            "destination": {
+                "address": "192.168.1.1",
+                "port": 5052 
+            },
+            "compression_level": 5,
+            "key": "/path/to/key",
+            "tx_interval": "hourly"           
         }
-    ],
-    "defaults": {
-        "compression_level": 5,
-        "key": "/path/to/key",
-        "tx_interval": "hourly"
-    }
+    ]
 }
