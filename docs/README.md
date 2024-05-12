@@ -80,7 +80,6 @@ struct Log {
 }
 
 ```
-
 </td>
 </tr>
 <tr>
