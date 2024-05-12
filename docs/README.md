@@ -34,52 +34,58 @@ WantedBy=multi-user.target
 
 <table>
 <tr>
+<td>Config</td>
+<td>Defaults</td>
 <td>Log</td>
 <td>Source</td>
 <td>Destination</td>
 </tr>
 <tr>
 <td>
-
 ```rust
-
+struct Config {
+    logs: Vec<Log>,
+    defaults: Defaults,
+}
+```
+</td>
+<td>
+```rust
+struct Defaults {
+    compression_level: Option<u8>,
+    key: Option<PathBuf>,
+    tx_interval: Option<String>,
+}
+```
+</td>
+<td>
+```rust
 struct Log {
    src: Source,
    dst: Destination,
-   compression_level: u8,
-   key: Path,
-   tx_interval: &str,
-}
-
+   compression_level: Option<u8>,
+   key: Option<PathBuf>,
+   tx_interval: Option<String>,}
 ```
 </td>
 <td>
-
 ```rust
-
 struct Source {
-    name: &str,
-    path: Path,
+    name: String,
+    path: PathBuf,
 }
-
 ```
 </td>
 <td>
-
 ```rust
-
 struct Destination {
     address: IpV4Addr or IpV6Addr,
     port: u16,
 }
-
 ```
 </td>
 </tr>
 </table>
-
-
-Testing if a flowchart can be made quickly in markdown.
 
 ```mermaid
 graph LR;

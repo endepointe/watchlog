@@ -1,12 +1,51 @@
 #![allow(unused_imports)]
 use std::io::prelude::*;
-use std::io::{self, BufRead,BufReader,Write};
+use std::io::{self, Read,BufRead,BufReader,Write};
 use std::fs::{self,File, OpenOptions};
+use std::net::{TcpListener, TcpStream,Ipv4Addr, Ipv6Addr};
+use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use std::thread;
 use std::process::{Command, Stdio};
+use serde::Deserialize;
+
+#[derive(Debug,Deserialize)]
+struct Source {
+    name: String,
+    path: PathBuf
+}
+
+/* Use ipv4 for now. In the future, detect the type of address.
+ */
+#[derive(Debug,Deserialize)]
+struct Destination {
+    address: Ipv4Addr,
+    port: u16
+}
+
+#[derive(Debug,Deserialize)]
+struct Log {
+    source: Source,
+    destination: Destination,
+    compression_level: Option<u8>,
+    key: Option<PathBuf>,
+    tx_interval: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Defaults {
+    compression_level: Option<u8>,
+    key: Option<PathBuf>,
+    tx_interval: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct Config {
+    logs: Vec<Log>,
+    defaults: Defaults,
+}
 
 struct App;
 
@@ -41,7 +80,6 @@ impl App {
                 }
                 let _ = tail_process.wait();
             });
-            //println!("Running background task for file: {}", file_path);
 
         }
         thread::park();   
@@ -67,31 +105,31 @@ fn start_watcher() -> Arc<Mutex<bool>> {
     terminate_flag
 }
 
+fn read_config() {
+    let mut file = std::fs::File::open("config.json").unwrap();
+    let mut buffer = String::new();
+    file.read_to_string(&mut buffer).unwrap();
+    let config : Config = serde_json::from_str(&buffer).unwrap();
+    println!("{:?}",config);
+}
+
 fn main() {
-    // A list, could be a vector, collection, should maintain a list of log 
-    // collection tasks. Each task should continue to run while in the 
-    // background.
-    //
-    // src_list: [src_0, src_1, ..., src_n]
-    // dst_list: [dst_0, dst_1, ..., dst_n]
-    
-    // There should be a sink/bucket/collection pool that recieves the output
-    // and prepares the data to be sent to a long-term storage solution.
-   
-    // decide whether using a Rc or Arc will be suitable for controlling 
-    // ownership of a log reading and collection stream.
-    // | src_0 | ---> | dst_0 | 
-    // | src_1 | ---> | dst_1 | 
-    // | src_2 | ---> | dst_2 | 
-    //
 
     let terminate_flag = start_watcher();
     io::stdout().flush().unwrap();  
     println!("{}",std::process::id());
 
+    /* Register signal handlers 
+     * Overall, the watch-log binary will be controlled by systemd. These signals become useful
+     * to restart the systemd watch-log service when a change is detected or errors occur. 
+     *
+     * For now, the sigquit should graceflly shutdown. That means communicating with the client
+     * that sends the logs to the server then mark and preserve any logs that have yet to be sent.
+     * */
     let sigquit = Arc::new(AtomicBool::new(false));
     let sigusr1 = Arc::new(AtomicBool::new(false));
     let sigusr2 = Arc::new(AtomicBool::new(false));
+
     signal_hook::flag::register(signal_hook::consts::SIGQUIT, Arc::clone(&sigquit));
     signal_hook::flag::register(signal_hook::consts::SIGUSR1, Arc::clone(&sigusr1));
     signal_hook::flag::register(signal_hook::consts::SIGUSR2, Arc::clone(&sigusr2));
@@ -127,26 +165,8 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_yaml() {
-        use toml;
-        use serde_derive::{Deserialize,Serialize};
-        use std::io::Read;
-
-        #[derive(Debug,Deserialize)]
-        struct Config {
-            title: String,
-            owner: Owner,
-        }
-
-        #[derive(Debug,Deserialize)]
-        struct Owner {
-            name: String,
-        }
-
-        let mut file = std::fs::File::open("config.toml").unwrap();
-        let mut buffer = String::new();
-        file.read_to_string(&mut buffer).unwrap();
-        let config : Config = toml::from_str(&buffer).unwrap();
-        println!("{:?}",config);
+    fn test_config() {
+        use crate::read_config;
+        read_config();
     }
 }

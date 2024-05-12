@@ -1,0 +1,23 @@
+{
+
+    "logs" : [
+        {
+            "source": {
+                "name": "test1.log",
+                "path": "./test1.log"
+            },
+            "destination": {
+                "address": "192.168.1.1",
+                "port": 5052 
+            },
+            "compression_level": 5,
+            "key": "/path/to/key",
+            "tx_interval": "hourly"           
+        }
+    ],
+    "defaults": {
+        "compression_level": 5,
+        "key": "/path/to/key",
+        "tx_interval": "hourly"
+    }
+}
