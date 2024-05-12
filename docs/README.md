@@ -56,9 +56,9 @@ struct Config {
 ```rust
 
 struct Defaults {
-    compression_level: Option<u8>,
-    key: Option<PathBuf>,
-    tx_interval: Option<String>,
+    compression_level: u8,
+    key: PathBuf,
+    tx_interval: String,
 }
 ```
 </td>
@@ -75,7 +75,7 @@ struct Log {
 ```
 </td>
 <td>
-j
+
 ```rust
 
 struct Source {
