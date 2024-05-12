@@ -45,7 +45,7 @@ struct Source {
     name: &str,
     path: Path,
 }
-        ``` 
+
 struct Destination {
     address: IpV4Addr | IpV6Addr,
     port: u16,
@@ -68,19 +68,15 @@ struct Destination {
   <tr>
     <td>200</td>
     <td>
-      <!-- Blank line! -->
-      ```json
-      {
-        "id": 10,
-        "username": "alanpartridge",
-        "email": "example@email.com",
-        "password_hash": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.CPCWCZsyqqa8./whhfzBZydX7yvahHS",
-        "password_salt": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.",
-        "created_at": "2015-02-14T20:45:26.433Z",
-        "updated_at": "2015-02-14T20:45:26.540Z"
-      }
-      ```
-      <!-- Blank line! -->
+        ```rust
+        struct Log {
+           src: Source,
+           dst: Destination,
+           compression_level: u8,
+           key: Path,
+           tx_interval: &str,
+        }
+        ```
     </td>
   </tr>
   <tr>
