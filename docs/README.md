@@ -95,7 +95,35 @@ struct Destination {
 ```
 </td>
 </tr>
+<tr>
+<td>Source</td>
+<td>Destination</td>
+</tr>
+<tr>
+<td>
+
+```rust
+
+struct Source {
+    name: String,
+    path: PathBuf,
+}
+```
+</td>
+<td>
+
+```rust
+
+struct Destination {
+    address: IpV4Addr or IpV6Addr,
+    port: u16,
+}
+```
+</td>
+</tr>
 </table>
+
+
 
 ```mermaid
 graph LR;
