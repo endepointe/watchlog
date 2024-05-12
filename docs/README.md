@@ -68,19 +68,18 @@ struct Destination {
   <tr>
     <td>200</td>
     <td>
-        <!-- Blank lines above and below! -->
-        ```rust
 
-        struct Log {
-           src: Source,
-           dst: Destination,
-           compression_level: u8,
-           key: Path,
-           tx_interval: &str,
-        }
-        ```
+```rust
 
-        <!-- Blank lines above and below! -->
+struct Log {
+   src: Source,
+   dst: Destination,
+   compression_level: u8,
+   key: Path,
+   tx_interval: &str,
+}
+```
+
     </td>
   </tr>
   <tr>
