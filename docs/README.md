@@ -68,8 +68,9 @@ struct Destination {
   <tr>
     <td>200</td>
     <td>
-
+        <!-- Blank lines above and below! -->
         ```rust
+
         struct Log {
            src: Source,
            dst: Destination,
@@ -79,6 +80,7 @@ struct Destination {
         }
         ```
 
+        <!-- Blank lines above and below! -->
     </td>
   </tr>
   <tr>
