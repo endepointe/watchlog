@@ -68,6 +68,7 @@ struct Destination {
   <tr>
     <td>200</td>
     <td>
+
         ```rust
         struct Log {
            src: Source,
@@ -77,6 +78,7 @@ struct Destination {
            tx_interval: &str,
         }
         ```
+
     </td>
   </tr>
   <tr>
