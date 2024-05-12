@@ -52,15 +52,11 @@ struct Destination {
 }
 ```
 
-| Log  | Second Header |
-| ------------- | ------------- |
-| ```rust
-    struct Log {
-       src: Source,
-       dst: Destination,
-       compression_level: u8,
-       key: Path,
-       tx_interval: &str,
-    }
-    ``` | Content Cell  |
-| Content Cell  | Content Cell  |
+| Log  | 
+| ------------- |
+| src: Source|
+| dst: Destination |
+| compression_level: u8 |
+| key: Path, |
+| tx_interval: &str |
+
