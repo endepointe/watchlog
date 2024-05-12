@@ -40,12 +40,14 @@ WantedBy=multi-user.target
        key: Path,
        tx_interval: &str,
     }
-    ``` |   ```rust
+    ``` 
+|   ```rust
             struct Source {
                 name: &str,
                 path: Path,
             }
-            ``` |   ```rust
+            ``` 
+|   ```rust
                     struct Destination {
                         address: IpV4Addr | IpV6Addr,
                         port: u16,
