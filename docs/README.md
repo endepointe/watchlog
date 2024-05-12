@@ -62,11 +62,11 @@ struct Destination {
 
 <table>
 <tr>
-<td>Status</td>
-<td>Response</td>
+<td>Log</td>
+<td>Source</td>
+<td>Destination</td>
 </tr>
 <tr>
-<td>200</td>
 <td>
 
 ```rust
@@ -81,11 +81,27 @@ struct Log {
 
 ```
 </td>
-</tr>
-<tr>
-<td>400</td>
 <td>
-  **Markdown** _here_. <!-- Blank lines above and below! -->
+
+```rust
+
+struct Source {
+    name: &str,
+    path: Path,
+}
+
+```
+</td>
+<td>
+
+```rust
+
+struct Destination {
+    address: IpV4Addr | IpV6Addr,
+    port: u16,
+}
+
+```
 </td>
 </tr>
 </table>
