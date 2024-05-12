@@ -32,33 +32,6 @@ WantedBy=multi-user.target
 
 ### Data Types
 ![Data Types](./data-types.png)
-```rust
-struct Log {
-   src: Source,
-   dst: Destination,
-   compression_level: u8,
-   key: Path,
-   tx_interval: &str,
-}
-
-struct Source {
-    name: &str,
-    path: Path,
-}
-
-struct Destination {
-    address: IpV4Addr | IpV6Addr,
-    port: u16,
-}
-```
-
-| Log  | 
-| ------------- |
-| src: Source|
-| dst: Destination |
-| compression_level: u8 |
-| key: Path, |
-| tx_interval: &str |
 
 <table>
 <tr>
@@ -97,7 +70,7 @@ struct Source {
 ```rust
 
 struct Destination {
-    address: IpV4Addr | IpV6Addr,
+    address: IpV4Addr \| IpV6Addr,
     port: u16,
 }
 
