@@ -83,7 +83,7 @@ Testing if a flowchart can be made quickly in markdown.
 
 ```mermaid
 graph TD;
-    "Read Logs"--> "Start Watcher";
-    "Start Watcher"--> "Send to Encryptor";
-    "Send to Encryptor"--> "Send to Compressor";
+    ReadLogs-->StartWatcher;
+    StartWatcher"-->SendtoEncryptor;
+    SendtoEncryptor-->SendtoCompressor;
 ``` 
