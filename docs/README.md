@@ -42,7 +42,9 @@ WantedBy=multi-user.target
 </tr>
 <tr>
 <td>
+
 ```rust
+
 struct Config {
     logs: Vec<Log>,
     defaults: Defaults,
@@ -50,7 +52,9 @@ struct Config {
 ```
 </td>
 <td>
+
 ```rust
+
 struct Defaults {
     compression_level: Option<u8>,
     key: Option<PathBuf>,
@@ -59,7 +63,9 @@ struct Defaults {
 ```
 </td>
 <td>
+
 ```rust
+
 struct Log {
    src: Source,
    dst: Destination,
@@ -69,7 +75,9 @@ struct Log {
 ```
 </td>
 <td>
+j
 ```rust
+
 struct Source {
     name: String,
     path: PathBuf,
@@ -77,7 +85,9 @@ struct Source {
 ```
 </td>
 <td>
+
 ```rust
+
 struct Destination {
     address: IpV4Addr or IpV6Addr,
     port: u16,
