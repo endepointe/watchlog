@@ -31,7 +31,6 @@ WantedBy=multi-user.target
 
 
 ### Data Types
-![Data Types](./data-types.png)
 
 <table>
 <tr>
