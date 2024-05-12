@@ -78,6 +78,7 @@ struct Log {
    key: Path,
    tx_interval: &str,
 }
+
 ```
     </td>
   </tr>
