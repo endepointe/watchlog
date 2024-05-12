@@ -32,7 +32,7 @@ WantedBy=multi-user.target
 
 ### Data Types
 ![Data Types](./data-types.png)
-```rust
+|```rust
 struct Log {
    src: Source,
    dst: Destination,
@@ -50,5 +50,5 @@ struct Destination {
     address: IpV4Addr | IpV6Addr,
     port: u16,
 }
-```
+```| description |
 
