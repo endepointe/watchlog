@@ -15,7 +15,7 @@ use serde::Deserialize;
 struct 
 Source {
     name: String,
-    path: String 
+    path: String
 }
 
 /* Use ipv4 for now. In the future, detect the type of address.
@@ -28,7 +28,8 @@ Destination {
 }
 
 #[derive(Debug,Deserialize)]
-struct Log {
+struct 
+Log {
     source: Source,
     destination: Destination,
     compression_level: Option<u8>,
@@ -51,12 +52,16 @@ Config {
     defaults: Defaults,
 }
 
+/* how do i avoid heep allocation with str? for now, using String
+ * */
 fn 
-run_tail(path: String, terminate_flag: Arc<Mutex<bool>>) -> Arc<Mutex<bool>> {
+run_tail(log: Log) {
+
+    let path = log.source.path.to_string();
 
     thread::spawn(move || {
         let mut tail_process = Command::new("tail")
-            .args(&["-f", "-n0", "-q", &path.as_str()]).stdout(Stdio::piped()).spawn()
+            .args(&["-f", "-n0", "-q", &path]).stdout(Stdio::piped()).spawn()
             .expect("Failed to execute tail command");
 
         let tail_stdout = tail_process.stdout.take().unwrap();
@@ -74,14 +79,6 @@ run_tail(path: String, terminate_flag: Arc<Mutex<bool>>) -> Arc<Mutex<bool>> {
         }
         let _ = tail_process.wait();
     });
-
-    thread::park();   
-    loop {
-        thread::sleep(Duration::from_secs(1));
-        if *terminate_flag.lock().unwrap() {
-            return terminate_flag;
-        }
-    }        
 }
 
 fn 
@@ -95,33 +92,25 @@ read_config() -> Config {
 }
 
 fn 
-start_watcher(logs: Vec<Log>) -> Arc<Mutex<bool>> {
+start_watcher() -> Arc<Mutex<bool>> {
+
+    let config : Config = read_config();
     let terminate_flag = Arc::new(Mutex::new(false));
-    let terminate_flag_clone = terminate_flag.clone();
+    let terminate_flag_clone = Arc::clone(&terminate_flag);
 
-    for log in logs {
-        let arc_log = Arc::new(log);
-        let arc_log_clone = arc_log.clone();
-        let source = &arc_log_clone.source;
-        //let destination = log.destination;
-        //let compression_level = log.compression_level.unwrap_or(0);
-        //let key = log.key.unwrap_or(PathBuf::new());
-        //let tx_interval = log.tx_interval.unwrap_or(String::from("0"));
-
-        //println!("{:?} {:?} {:?} {:?} {:?}", source, destination, compression_level, key, tx_interval);
-        thread::spawn(move || {
-            run_tail(source.path.clone(), terminate_flag_clone.clone());
-        });
-        //run_tail(source.path.clone(), terminate_flag_clone.clone());
+    /* need to find a way to better control these threads. 
+     * considering using park: https://doc.rust-lang.org/std/thread/fn.park.html
+     * */
+    for log in config.logs {
+        let path = log.source.path.to_string();
+        run_tail(log);
     }
-
     terminate_flag
 }
 
 fn 
 main() {
-    let config : Config = read_config();
-    let terminate_flag = start_watcher(config.logs);
+    let terminate_flag = start_watcher();
     io::stdout().flush().unwrap();  
     println!("{}",std::process::id());
 
@@ -184,5 +173,11 @@ mod tests {
         println!("{:?}", config);
         let terminate_flag = start_watcher(config.logs);
         println!("{:?}", terminate_flag);
+    }
+
+    #[test]
+    fn test_systemd_file() {
+        // the unit file no longer needs to redirect output to output.log
+        println!("test systemd file");
     }
 }
