@@ -11,7 +11,7 @@
 
 
 ### Configuration
-To make changed to the uystemd Unit File:
+To make changed to the systemd unit file:
 
 Make a copy of the `/etc/systemd/system/watch-log.service` file. The following is an example of the default systemd unit file for a service that runs the watch-log service:
 
