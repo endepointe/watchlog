@@ -55,7 +55,7 @@ struct Config {
 
 struct Defaults {
     compression_level: u8,
-    key: PathBuf,
+    key: String,
     tx_interval: String,
 }
 ```
@@ -68,7 +68,7 @@ struct Log {
    src: Source,
    dst: Destination,
    compression_level: Option<u8>,
-   key: Option<PathBuf>,
+   key: Option<String>,
    tx_interval: Option<String>,}
 ```
 </td>
@@ -84,7 +84,7 @@ struct Log {
 
 struct Source {
     name: String,
-    path: PathBuf,
+    path: String,
 }
 ```
 </td>
@@ -102,10 +102,14 @@ struct Destination {
 </table>
 
 
+### Flow Chart
+
+General flow chart of the application:
 
 ```mermaid
 graph LR;
-    ReadLogs-->StartWatcher;
-    StartWatcher"-->Send_to_Encryptor;
-    SendtoEncryptor-->SendtoCompressor;
+    start_watcher-->run_tail;
+    run_tail-->encrypt;
+    encrypt-->compress;
+    compress-->send;
 ``` 

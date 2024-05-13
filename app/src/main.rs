@@ -33,7 +33,7 @@ Log {
     source: Source,
     destination: Destination,
     compression_level: Option<u8>,
-    key: Option<PathBuf>,
+    key: Option<String>,
     tx_interval: Option<String>,
 }
 
@@ -41,7 +41,7 @@ Log {
 struct 
 Defaults {
     compression_level: u8,
-    key: PathBuf,
+    key: String,
     tx_interval: String,
 }
 
