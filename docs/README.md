@@ -69,7 +69,7 @@ struct Log {
    dst: Destination,
    compression_level: Option<u8>,
    key: Option<String>,
-   tx_interval: Option<String>,}
+   tx_interval: Option<String>,
 ```
 </td>
 </tr>
