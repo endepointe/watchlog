@@ -1,30 +1,88 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-    <title>WatchLog Wiki</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WatchLog Wiki</title>
+<style>
+.tb {
+    /*border: 1px solid red;*/
+}
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <p>WatchLog Wiki</p>
-        Here is one mermaid diagram:
-    <pre class="mermaid">
-            graph TD 
-            A[Client] --> B[Load Balancer] 
-            B --> C[Server1] 
-            B --> D[Server2]
-    </pre>
+<body class="bg-dark text-white">
+    <main class="container">
 
-    And here is another:
-    <pre class="mermaid">
-            graph TD 
-            A[Client] -->|tcp_123| B
-            B(Load Balancer) 
-            B -->|tcp_456| C[Server1] 
-            B -->|tcp_456| D[Server2]
-    </pre>
-      <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        <!-- hero -->
+        <div class="row">
+            <div class="col">
+                <h1>WatchLog Wiki</h1>
+                <p>WatchLog is a simple log monitoring tool.</p>
+            </div>
+        </div>
 
-    mermaid.initialize({ startOnLoad: true });
-  </script>
+        <!-- decription section -->
+        <div class="row">
+            <div class="col">
+                <h2>What is WatchLog?</h2>
+                <p>WatchLog is a simple log monitoring tool. It is designed to monitor log files and send alerts when certain conditions are met.</p>
+            </div>
+        </div>
+
+        <!-- two column section -->
+        <div class="row">
+            <div class="col-md-6 tb">
+                <h2>Features</h2>
+                <ul>
+                    <li>Monitor log files</li>
+                    <li>Simple configuration</li>
+                </ul>
+                <div class="tb">
+                    <pre class="mermaid no-select">
+                        graph LR 
+                        A[ReadConfig] --> L1[path/to/syslog]
+                        A --> L2[path/to/auth.log]
+                        A --> L3[path/to/messages]
+                        A --> L4[path/to/secure]
+                        W[WatchLog] --> B[Collect]
+                        B --> B1[Process]
+                        B1 --> B
+                        B1 --> C[Encrypt]
+                        C --> D[Send]
+                    </pre>
+                </div>
+            </div>
+            <div class="col-md-6 tb">
+                <h2>Available on:</h2>
+                <ul>
+                    <li>Linux</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                fontSize: '18px',
+            }
+        });
+    </script>
+
+    <script type="module">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
