@@ -47,7 +47,8 @@ Defaults {
 
 #[derive(Debug, Deserialize)]
 struct 
-Config {
+Config 
+{
     logs: Vec<Log>,
     defaults: Defaults,
 }
@@ -55,8 +56,8 @@ Config {
 /* how do i avoid heep allocation with str? for now, using String
  * */
 fn 
-run_tail(log: Log) {
-
+run_tail(log: Log) 
+{
     let path = log.source.path.to_string();
 
     thread::spawn(move || {
