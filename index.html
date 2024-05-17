@@ -28,41 +28,114 @@
     font-size: 50px;
     color: #007bff;
 }
+#globe-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+.space {
+    height: 4rem;
+}
+
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body class="bg-dark text-white no-select">
-        <section class="hero">
+    <div id="globe-container">
+        <div id="globeViz"></div>
+    </div>
+
+    <div class="hero">
+        <div class="container">
+            <h1 class="display-4">WatchLog Wiki</h1>
+            <p class="lead">WatchLog : a simple log collection tool.</p>
+            <a href="#description" class="btn btn-primary btn-lg">Learn More</a>
+        </div>
+    </div>
+
+    <div class="space"></div>
+    <div class="space"></div>
+
+    <main class="container" id="description">
+        <div class="row justify-content-center m-5">
+            <div class="col-6 text-center">
+                <h1>What is WatchLog?</h1>
+                <p>Designed to collect events for storage.</p>
+                <p>Enabling wide visibility for your team from anywhere.</p>
+            </div>
+        </div>
+
+        <div class="space"></div>
+        <div class="space"></div>
+
+        <div class="row align-items-center">
+            <div class="col-6">
+                <div class="col-10">
+                    <img src="wiki/images/1.svg" alt="placeholder" class="img-thumbnail bg-black">
+                </div>
+            </div>
+ 
+            <div class="col-6">
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <h1>Why WatchLog?</h1>
+                        <p class="my-4">While every device is capable of collecting log events, that information is no good in isolation.</p> 
+                        <p class="my-4">WatchLog increases visibility of your assets, enabling your team to diagnose issues regardless of their location.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space"></div>
+        <div class="space"></div>
+
+        <div id="features" class="py-5">
             <div class="container">
-                <h1 class="display-4">WatchLog Wiki</h1>
-                <p class="lead">WatchLog : a simple log collection tool.</p>
-                <a href="#description" class="btn btn-primary btn-lg">Learn More</a>
-            </div>
-        </section>
-
-
-    <main class="container mt-4 mb-4" id="description">
-        <div class="row justify-content-center mb-4">
-            <div class="col-4">
-                <h2>What is WatchLog?</h2>
-                <p>Designed to collect events for long-term storage, enabling wide visibility for your team from any location.</p>
-            </div>
-            <div class="col-4">
-                <img src="wiki/images/1.svg" alt="placeholder" class="img-thumbnail bg-black">
+                <div class="text-center mb-5">
+                    <h1 class="section-title">Features</h1>
+                </div>
+                <div class="row justify-content-between">
+                    <div class="col-md-4 text-center border-end">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h4>Easy Integration</h4>
+                        <p>Integrate WatchLog into your existing infrastructure.</p>
+                    </div>
+                    <div class="col-md-4 text-center border-end">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Real-Time Analysis</h4>
+                        <p>Get insights and analytics in real-time to make informed decisions.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h4>Secure Storage</h4>
+                        <p>Securely store logs using a flexible server.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row justify-content-center mb-4">
-            <div class="col-4">
-                Users should not have to worry about more than they have to. 
-            </div>
-            <div class="col-4">
-                <img src="wiki/images/1.svg" alt="placeholder" class="img-thumbnail bg-black">
-            </div>
-        </div>
+        <div class="space"></div>
+        <div class="space"></div>
 
-        <div class="row">
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <h1>Architecture</h1>
+            </div>
+
+            <div class="space"></div>
+
             <pre class="mermaid">
                 graph LR 
                 A(ReadConfig) --> L1(path/to/syslog)
@@ -83,9 +156,34 @@
                 Srv --> S[(Storage)]
             </pre>
         </div>
-
-
     </main>
+
+    <div class="space"></div>
+    <div class="space"></div>
+
+    <div class="py-5 text-white">
+        <div class="container text-center">
+            <h2 class="mb-4">Project</h2>
+            <p class="lead mb-4">Suggestions and PR's are welcomed.</p>
+            <a href="https://github.com/endepointe/watch-log" class="btn btn-light btn-lg"
+                target="_blank"><span class="mx-1"><i class="fab fa-github"></i></span>Github
+            </a>
+        </div>
+     </div>
+
+    <div class="space"></div>
+    <div class="space"></div>
+
+    <footer class="py-4 bg-dark text-white text-center">
+        <div class="container">
+            <p class="mb-0">&copy; <span id="year"></span> WatchLog. This is OpenSource.</p>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/447eb80237.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="//unpkg.com/globe.gl"></script>
+ 
 
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
@@ -100,8 +198,36 @@
     </script>
 
     <script type="module">
+        const year = new Date().getFullYear();
+        document.getElementById('year').textContent = year;
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        const N = 36;
+        const gData = [...Array(N).keys()].map(() => ({
+            lat: (Math.random() - 0.5) * 180,
+            lng: (Math.random() - 0.5) * 360,
+            maxR: Math.random() * 20 + 3,
+            propagationSpeed: (Math.random() - 0.5) + 1,
+            repeatPeriod: Math.random() * 2000 + 150
+        }));
+
+        const colorInterpolator = t => `rgba(255,100,50,${Math.sqrt(1-t)})`;
+        const globeViz = document.getElementById('globeViz')
+
+        const globe = Globe()
+            (globeViz)
+            .pointOfView({ altitude: 1})
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .ringsData(gData)
+            .ringColor(() => colorInterpolator)
+            .ringMaxRadius('maxR')
+            .ringPropagationSpeed('propagationSpeed')
+            .ringRepeatPeriod(3000);
+        setInterval(() => {
+            globe.pointOfView({ lat: Math.random() * 180 - 90, lng: Math.random() * 360 - 180, altitude: 1 });
+        }, 4000);
+    </script>
 </body>
 
