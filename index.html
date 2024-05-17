@@ -13,59 +13,78 @@
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
-
+.hero {
+    /*background: url('https://via.placeholder.com/1920x800') no-repeat center center;*/
+    background-size: cover;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.feature-icon {
+    font-size: 50px;
+    color: #007bff;
+}
 </style>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body class="bg-dark text-white">
-    <main class="container">
-
-        <!-- hero -->
-        <div class="row">
-            <div class="col">
-                <h1>WatchLog Wiki</h1>
-                <p>WatchLog is a simple log monitoring tool.</p>
+<body class="bg-dark text-white no-select">
+        <section class="hero">
+            <div class="container">
+                <h1 class="display-4">WatchLog Wiki</h1>
+                <p class="lead">WatchLog : a simple log collection tool.</p>
+                <a href="#description" class="btn btn-primary btn-lg">Learn More</a>
             </div>
-        </div>
+        </section>
 
-        <!-- decription section -->
-        <div class="row">
-            <div class="col">
+
+    <main class="container mt-4 mb-4" id="description">
+        <div class="row justify-content-center mb-4">
+            <div class="col-4">
                 <h2>What is WatchLog?</h2>
-                <p>WatchLog is a simple log monitoring tool. It is designed to monitor log files and send alerts when certain conditions are met.</p>
+                <p>Designed to collect events for long-term storage, enabling wide visibility for your team from any location.</p>
+            </div>
+            <div class="col-4">
+                <img src="wiki/images/1.svg" alt="placeholder" class="img-thumbnail bg-black">
             </div>
         </div>
 
-        <!-- two column section -->
-        <div class="row">
-            <div class="col-md-6 tb">
-                <h2>Features</h2>
-                <ul>
-                    <li>Monitor log files</li>
-                    <li>Simple configuration</li>
-                </ul>
-                <div class="tb">
-                    <pre class="mermaid no-select">
-                        graph LR 
-                        A[ReadConfig] --> L1[path/to/syslog]
-                        A --> L2[path/to/auth.log]
-                        A --> L3[path/to/messages]
-                        A --> L4[path/to/secure]
-                        W[WatchLog] --> B[Collect]
-                        B --> B1[Process]
-                        B1 --> B
-                        B1 --> C[Encrypt]
-                        C --> D[Send]
-                    </pre>
-                </div>
+        <div class="row justify-content-center mb-4">
+            <div class="col-4">
+                Users should not have to worry about more than they have to. 
             </div>
-            <div class="col-md-6 tb">
-                <h2>Available on:</h2>
-                <ul>
-                    <li>Linux</li>
-                </ul>
+            <div class="col-4">
+                <img src="wiki/images/1.svg" alt="placeholder" class="img-thumbnail bg-black">
             </div>
         </div>
+
+        <div class="row">
+            <pre class="mermaid">
+                graph LR 
+                A(ReadConfig) --> L1(path/to/syslog)
+                A --> L2(path/to/auth.log)
+                A --> L3(path/to/messages)
+                A --> L4(path/to/secure)
+                L1 --> W(WatchLog)
+                L2 --> W
+                L3 --> W
+                L4 --> W
+                W --> Col(Collector)
+                Col --> W
+                Col --> Enc(Encrypt)
+                Enc --> Cmpr(Compress)
+                Cmpr --> Tx(Transmit)
+                Tx --> |purge| Col 
+                Tx --> Srv(Server)
+                Srv --> S[(Storage)]
+            </pre>
+        </div>
+
+
     </main>
 
     <script type="module">
