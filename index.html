@@ -226,9 +226,14 @@
             .ringMaxRadius('maxR')
             .ringPropagationSpeed('propagationSpeed')
             .ringRepeatPeriod(3000);
+
+        globe.controls().autoRotate = true;
+        globe.controls().autoRotateSpeed = 0.7;
+
         setInterval(() => {
-            globe.pointOfView({ lat: Math.random() * 180 - 90, lng: Math.random() * 360 - 180, altitude: 1 });
+            //globe.pointOfView({ lat: Math.random() * 180 - 90, lng: Math.random() * 360 - 180, altitude: 1 });
         }, 4000);
+
     </script>
 </body>
 
