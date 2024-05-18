@@ -18,20 +18,20 @@ System Event Management Software should allow users to capture system and applic
 (not ready) curl --proto '=https' --tlsv1.2 -sSf https://sh.endepointe.com | bash
 
 ### Configuration:
-    To set the log collection interval, set the ```tx_interval``` value in `config.json` to one of the following:
+To set the log collection interval, set the ```tx_interval``` value in `config.json` to one of the following:
 
-    Two column table:
-    | Interval | Description |
-    | --- | --- |
-    | 1m | 1 minute |
-    | 5m | 5 minutes |
-    | 10m | 10 minutes |
-    | 30m | 30 minutes |
-    | 1h | 1 hour |
-    | 6h | 6 hours |
-    | 12h | 12 hours |
+Two column table:
+| Interval | Description |
+| --- | --- |
+| 1m | 1 minute |
+| 5m | 5 minutes |
+| 10m | 10 minutes |
+| 30m | 30 minutes |
+| 1h | 1 hour |
+| 6h | 6 hours |
+| 12h | 12 hours |
 
-    The default value is 1m.
+The default value is 1m.
 
 
 ### Usage:
