@@ -107,9 +107,21 @@ struct Destination {
 General flow chart of the application:
 
 ```mermaid
-graph LR;
-    start_watcher-->run_tail;
-    run_tail-->encrypt;
-    encrypt-->compress;
-    compress-->send;
+graph LR 
+A(ReadConfig) --> L1(path/to/syslog)
+A --> L2(path/to/auth.log)
+A --> L3(path/to/messages)
+A --> L4(path/to/secure)
+L1 --> W(WatchLog)
+L2 --> W
+L3 --> W
+L4 --> W
+W --> Col(Collector)
+Col --> W
+Col --> Enc(Encrypt)
+Enc --> Cmpr(Compress)
+Cmpr --> Tx(Transmit)
+Tx --> |purge| Col 
+Tx --> Srv(Server)
+Srv --> S[(Storage)]
 ``` 
