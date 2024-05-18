@@ -33,7 +33,6 @@ Two column table:
 
 The default value is 1m.
 
-```bash
 ### Usage:
 After installation, start the service using the following command:
 
