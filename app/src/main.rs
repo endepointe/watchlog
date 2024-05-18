@@ -1,6 +1,6 @@
 #![allow(unused_imports)]
 use std::io::prelude::*;
-use std::io::{self, Read,BufRead,BufReader,Write};
+use std::io::{self, Read,Write, BufRead,BufReader};
 use std::fs::{self,File, OpenOptions};
 use std::net::{TcpListener, TcpStream,Ipv4Addr, Ipv6Addr};
 use std::path::{Path, PathBuf};
@@ -56,7 +56,7 @@ Config
 /* how do i avoid heep allocation with str? for now, using String
  * */
 fn 
-run_tail(log: Log) 
+collect(log: Log) 
 {
     let path = log.source.path.to_string();
 
@@ -93,7 +93,7 @@ read_config() -> Config {
 }
 
 fn 
-start_watcher() -> Arc<Mutex<bool>> {
+watch_logs() -> Arc<Mutex<bool>> {
 
     let config : Config = read_config();
     let terminate_flag = Arc::new(Mutex::new(false));
@@ -104,14 +104,64 @@ start_watcher() -> Arc<Mutex<bool>> {
      * */
     for log in config.logs {
         let path = log.source.path.to_string();
-        run_tail(log);
+        collect(log);
     }
+    terminate_flag
+}
+
+fn transmit() -> std::io::Result<()> {
+    let mut stream = TcpStream::connect("127.0.0.1:5001")?;
+    // this header information contains the name of the directory to save the file to.
+    // Example: if the transfer inverval is set to every hour, the directory name will be the 
+    // current date and the child files will be saved in that directory.
+    stream.write_all(b"send over header information")?;
+    let mut buffer = [0; 1024];
+    stream.read(&mut buffer)?;
+    println!("Received: {}", String::from_utf8_lossy(&buffer));
+    Ok(())
+}
+
+/*
+ * Takes the parameter to determine how long to collect logs into a
+ * file before closing the file and sending it to the server.
+ *
+ * returns a boolean once the time has been reached.
+ *
+ * The times a user can select are 1 minute, 5 minutes, 10 minutes, 30 minutes, 1 hour, 6 hours, 12
+ * hours.
+ * 
+ * Default is 1 minute.
+ */
+fn start_interval(string: String) -> Arc<Mutex<bool>>  {
+    let terminate_flag = Arc::new(Mutex::new(false));
+    let terminate_flag_clone = Arc::clone(&terminate_flag);
+    let mut interval = 0;
+    match string.as_str() {
+        "1m" => interval = 60,
+        "5m" => interval = 300,
+        "10m" => interval = 600,
+        "30m" => interval = 1800,
+        "1h" => interval = 3600,
+        "6h" => interval = 21600,
+        "12h" => interval = 43200,
+        _ => interval = 60,
+    }
+
+    let mut count = 0;
+    thread::spawn(move || {
+        while count < interval {
+            thread::sleep(Duration::from_secs(1));
+            count += 1;
+        }
+        *terminate_flag_clone.lock().unwrap() = true;
+    });
+
     terminate_flag
 }
 
 fn 
 main() {
-    let terminate_flag = start_watcher();
+    let terminate_flag = watch_logs();
     io::stdout().flush().unwrap();  
     println!("{}",std::process::id());
 
@@ -172,7 +222,7 @@ mod tests {
         use crate::{Config, read_config,start_watcher};
         let config : Config = read_config();
         println!("{:?}", config);
-        let terminate_flag = start_watcher(config.logs);
+        let terminate_flag = watch_logs(config.logs);
         println!("{:?}", terminate_flag);
     }
 
@@ -180,5 +230,18 @@ mod tests {
     fn test_systemd_file() {
         // the unit file no longer needs to redirect output to output.log
         println!("test systemd file");
+    }
+
+    #[test]
+    fn test_start_interval() {
+        use crate::start_interval;
+        let stop_interval = start_interval("1m".to_string());
+        let mut count = 0;
+        while !*stop_interval.lock().unwrap() {
+            println!("Interval not yet reached. count is {}", count);
+            thread::sleep(Duration::from_secs(1));
+            count += 1;
+        }
+        println!("Interval reached.");
     }
 }
