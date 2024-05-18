@@ -3,7 +3,7 @@
 
 # Watch-Log
 
-## Table of Contents:
+# Table of Contents:
 
 - [Overview](#overview)
 - [Installation](#installation)
@@ -11,13 +11,13 @@
 - [Usage](#usage)
 - [Docs](#docs)
 
-### Overview:
+## Overview:
 System Event Management Software should allow users to capture system and application activity while owning their data. By collecting system and application events using a simple and cost-efficient solution, users can monitor the health of their digital assets.
 
-### Installation:
+## Installation:
 (not ready) curl --proto '=https' --tlsv1.2 -sSf https://sh.endepointe.com | bash
 
-### Configuration:
+## Configuration:
 To set the log collection interval, set the ```tx_interval``` value in `config.json` to one of the following:
 
 Two column table:
@@ -34,7 +34,7 @@ Two column table:
 The default value is 1m.
 
 
-### Usage:
+## Usage:
 After installation, start the service using the following command:
 
 systemctl enable watch-log.service
