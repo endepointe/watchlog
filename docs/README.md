@@ -56,7 +56,7 @@ struct Config {
 struct Defaults {
     compression_level: u8,
     key: String,
-    tx_interval: String,
+    tx_buffer: String,
 }
 ```
 </td>
@@ -69,7 +69,7 @@ struct Log {
    dst: Destination,
    compression_level: Option<u8>,
    key: Option<String>,
-   tx_interval: Option<String>,
+   tx_buffer: Option<String>,
 ```
 </td>
 </tr>
