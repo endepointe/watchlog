@@ -20,7 +20,6 @@ System Event Management Software should allow users to capture system and applic
 ## Configuration:
 To set the log collection buffer, set the ```tx_buffer``` value in `config.json` to one of the following:
 
-Two column table:
 | Interval | Description |
 | --- | --- |
 | 1kb | 1024 bytes |
