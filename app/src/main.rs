@@ -13,7 +13,8 @@ use serde::Deserialize;
 
 #[derive(Debug,Deserialize)]
 struct 
-Source {
+Source 
+{
     name: String,
     path: String
 }
@@ -22,14 +23,16 @@ Source {
  */
 #[derive(Debug,Deserialize)]
 struct 
-Destination {
+Destination 
+{
     address: Ipv4Addr,
     port: u16
 }
 
 #[derive(Debug,Deserialize)]
 struct 
-Log {
+Log 
+{
     source: Source,
     destination: Destination,
     compression_level: Option<u8>,
@@ -39,7 +42,8 @@ Log {
 
 #[derive(Debug, Deserialize)]
 struct 
-Defaults {
+Defaults 
+{
     compression_level: u8,
     key: String,
     tx_interval: String,
@@ -53,8 +57,12 @@ Config
     defaults: Defaults,
 }
 
-/* how do i avoid heep allocation with str? for now, using String
- * */
+fn
+encrypt(buffer: &mut Vec<String>, key: String) 
+{
+    println!("encryptbuffer ... {:?}", buffer);
+}
+
 fn 
 collector(log: Log) 
 {
@@ -69,10 +77,18 @@ collector(log: Log)
 
         let reader = io::BufReader::new(tail_stdout);
 
+        //let cap = 4096;
+        let cap = 10;
+        let mut buffer: Vec<String> = Vec::with_capacity(cap); 
+
         for line in reader.lines() {
             if let Ok(line) = line {
-                // send to encryption
-                println!("{}", line);
+                if line.len() + buffer.len() < cap {
+                    buffer.push(line);
+                } else {
+                    encrypt(&mut buffer, "secretkey".to_string());
+                    buffer.clear();
+                } 
             } else {
                 // write to error log file perhaps
                 println!("Error reading line");
@@ -83,7 +99,8 @@ collector(log: Log)
 }
 
 fn 
-read_config() -> Config {
+read_config() -> Config 
+{
     let mut file = std::fs::File::open("config.json").unwrap();
     let mut buffer = String::new();
     file.read_to_string(&mut buffer).unwrap();
@@ -93,15 +110,13 @@ read_config() -> Config {
 }
 
 fn 
-watch_logs() -> Arc<Mutex<bool>> {
+watch_logs() -> Arc<Mutex<bool>> 
+{
 
     let config : Config = read_config();
     let terminate_flag = Arc::new(Mutex::new(false));
     let terminate_flag_clone = Arc::clone(&terminate_flag);
 
-    /* need to find a way to better control these threads. 
-     * considering using park: https://doc.rust-lang.org/std/thread/fn.park.html
-     * */
     for log in config.logs {
         let path = log.source.path.to_string();
         collector(log);
@@ -109,7 +124,8 @@ watch_logs() -> Arc<Mutex<bool>> {
     terminate_flag
 }
 
-fn transmit() -> std::io::Result<()> {
+fn transmit() -> std::io::Result<()> 
+{
     let mut stream = TcpStream::connect("127.0.0.1:5001")?;
     // this header information contains the name of the directory to save the file to.
     // Example: if the transfer inverval is set to every hour, the directory name will be the 
@@ -118,14 +134,19 @@ fn transmit() -> std::io::Result<()> {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer)?;
     println!("Received: {}", String::from_utf8_lossy(&buffer));
+
     Ok(())
 }
 
-fn start_interval(string: String) -> Arc<Mutex<bool>>  {
+fn 
+start_interval(string: Option<String>) -> Arc<Mutex<bool>>  
+{
     let terminate_flag = Arc::new(Mutex::new(false));
     let terminate_flag_clone = Arc::clone(&terminate_flag);
     let mut interval = 0;
-    match string.as_str() {
+    let val = string.unwrap_or("1m".to_string());
+
+    match val.as_str() {
         "1m" => interval = 60,
         "5m" => interval = 300,
         "10m" => interval = 600,
@@ -149,7 +170,8 @@ fn start_interval(string: String) -> Arc<Mutex<bool>>  {
 }
 
 fn 
-main() {
+main() 
+{
     let terminate_flag = watch_logs();
     io::stdout().flush().unwrap();  
     println!("{}",std::process::id());
@@ -207,11 +229,11 @@ mod tests {
     }
 
     #[test]
-    fn test_start_watcher() {
-        use crate::{Config, read_config,start_watcher};
+    fn test_watch_logs() {
+        use crate::{Config, read_config,watch_logs};
         let config : Config = read_config();
         println!("{:?}", config);
-        let terminate_flag = watch_logs(config.logs);
+        let terminate_flag = watch_logs();
         println!("{:?}", terminate_flag);
     }
 
@@ -224,7 +246,10 @@ mod tests {
     #[test]
     fn test_start_interval() {
         use crate::start_interval;
-        let stop_interval = start_interval("1m".to_string());
+        use std::time::Duration;
+        use std::thread;
+        //let stop_interval = start_interval(Some("1m".to_string()));
+        let stop_interval = start_interval(None);
         let mut count = 0;
         while !*stop_interval.lock().unwrap() {
             println!("Interval not yet reached. count is {}", count);
