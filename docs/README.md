@@ -18,10 +18,10 @@ Make a copy of the `/etc/systemd/system/watch-log.service` file. The following i
 ```bash
 
 [Unit]
-Description=Watch-Log Service
+Description=WatchLog Service
 
 [Service]
-ExecStart=bin/bash -c 'path/to/watch-log > path/to/watch-log-health 2>&1'
+ExecStart=bin/bash -c 'path/to/watchlog'
 WorkingDirectory=path/to
 StandardOutput=journal
 

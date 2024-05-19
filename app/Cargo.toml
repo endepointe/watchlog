@@ -1,5 +1,5 @@
 [package]
-name = "watch-log"
+name = "watchlog"
 version = "0.1.0"
 edition = "2021"
 
@@ -13,8 +13,4 @@ signal-hook = "0.3.17"
 [[bin]]
 name = "server"
 path = "src/server.rs"
-
-[[bin]]
-name = "client"
-path = "src/client.rs"
 

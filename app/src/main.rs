@@ -56,7 +56,7 @@ Config
 /* how do i avoid heep allocation with str? for now, using String
  * */
 fn 
-collect(log: Log) 
+collector(log: Log) 
 {
     let path = log.source.path.to_string();
 
@@ -104,7 +104,7 @@ watch_logs() -> Arc<Mutex<bool>> {
      * */
     for log in config.logs {
         let path = log.source.path.to_string();
-        collect(log);
+        collector(log);
     }
     terminate_flag
 }
@@ -121,17 +121,6 @@ fn transmit() -> std::io::Result<()> {
     Ok(())
 }
 
-/*
- * Takes the parameter to determine how long to collect logs into a
- * file before closing the file and sending it to the server.
- *
- * returns a boolean once the time has been reached.
- *
- * The times a user can select are 1 minute, 5 minutes, 10 minutes, 30 minutes, 1 hour, 6 hours, 12
- * hours.
- * 
- * Default is 1 minute.
- */
 fn start_interval(string: String) -> Arc<Mutex<bool>>  {
     let terminate_flag = Arc::new(Mutex::new(false));
     let terminate_flag_clone = Arc::clone(&terminate_flag);
