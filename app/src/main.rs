@@ -37,7 +37,7 @@ Log
     destination: Destination,
     compression_level: Option<u8>,
     key: Option<String>,
-    tx_interval: Option<String>,
+    tx_buffer: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -46,7 +46,7 @@ Defaults
 {
     compression_level: u8,
     key: String,
-    tx_interval: String,
+    tx_buffer: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -124,7 +124,8 @@ watch_logs() -> Arc<Mutex<bool>>
     terminate_flag
 }
 
-fn transmit() -> std::io::Result<()> 
+fn 
+transmit() -> std::io::Result<()> 
 {
     let mut stream = TcpStream::connect("127.0.0.1:5001")?;
     // this header information contains the name of the directory to save the file to.
@@ -139,34 +140,19 @@ fn transmit() -> std::io::Result<()>
 }
 
 fn 
-start_interval(string: Option<String>) -> Arc<Mutex<bool>>  
+set_tx_buffer(string: Option<String>) -> u32  
 {
-    let terminate_flag = Arc::new(Mutex::new(false));
-    let terminate_flag_clone = Arc::clone(&terminate_flag);
-    let mut interval = 0;
-    let val = string.unwrap_or("1m".to_string());
+    let mut bsize = 0;
+    let val = string.unwrap_or("stream".to_string());
 
     match val.as_str() {
-        "1m" => interval = 60,
-        "5m" => interval = 300,
-        "10m" => interval = 600,
-        "30m" => interval = 1800,
-        "1h" => interval = 3600,
-        "6h" => interval = 21600,
-        "12h" => interval = 43200,
-        _ => interval = 60,
+        "1kb" => bsize = 1024,
+        "4kb" => bsize = 4096,
+        "1mb" => bsize = 1024 * 1024,
+        _ => bsize = 0, // stream the data
     }
-
-    let mut count = 0;
-    thread::spawn(move || {
-        while count < interval {
-            thread::sleep(Duration::from_secs(1));
-            count += 1;
-        }
-        *terminate_flag_clone.lock().unwrap() = true;
-    });
-
-    terminate_flag
+    
+    bsize
 }
 
 fn 
@@ -245,17 +231,9 @@ mod tests {
 
     #[test]
     fn test_start_interval() {
-        use crate::start_interval;
-        use std::time::Duration;
-        use std::thread;
+        use crate::set_tx_buffer;
         //let stop_interval = start_interval(Some("1m".to_string()));
-        let stop_interval = start_interval(None);
-        let mut count = 0;
-        while !*stop_interval.lock().unwrap() {
-            println!("Interval not yet reached. count is {}", count);
-            thread::sleep(Duration::from_secs(1));
-            count += 1;
-        }
-        println!("Interval reached.");
+        let stop_buffer = set_tx_buffer(None);
+        println!("{:?}", stop_buffer);
     }
 }

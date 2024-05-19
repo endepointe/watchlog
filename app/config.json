@@ -2,7 +2,7 @@
     "defaults": {
         "compression_level": 5,
         "key": "/path/to/key",
-        "tx_interval": "hourly"
+        "tx_buffer": "1kb"
     },
     "logs" : [
         {
@@ -16,7 +16,7 @@
             },
             "compression_level": 5,
             "key": "/path/to/key",
-            "tx_interval": "hourly"           
+            "tx_buffer": "1kb"           
         },
         {
             "source": {
@@ -29,7 +29,7 @@
             },
             "compression_level": 5,
             "key": "/path/to/key",
-            "tx_interval": "hourly"           
+            "tx_buffer": "1kb"
         }
     ]
 }
