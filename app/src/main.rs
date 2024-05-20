@@ -11,6 +11,10 @@ use std::thread;
 use std::process::{Command, Stdio};
 use serde::Deserialize;
 
+use openssl::encrypt::{Encrypter, Decrypter};
+use openssl::rsa::{Rsa, Padding};
+use openssl::pkey::PKey;
+
 #[derive(Debug,Deserialize)]
 struct 
 Source 
@@ -61,6 +65,12 @@ fn
 encrypt(buffer: &mut Vec<String>, key: String) 
 {
     println!("encryptbuffer ... {:?}", buffer);
+    let keypair = Rsa::generate(2048).unwrap();
+    let keypair = PKey::from_rsa(keypair).unwrap();
+    // convert a vector of strings to a single string
+    let s: String = buffer.join("");
+    println!("string: {:?}", s);
+    println!("public key: {:?}", keypair);
 }
 
 fn 
@@ -235,5 +245,38 @@ mod tests {
         //let stop_interval = start_interval(Some("1m".to_string()));
         let stop_buffer = set_tx_buffer(None);
         println!("{:?}", stop_buffer);
+    }
+
+    #[test]
+    fn test_compression() {
+        use std::process::Command;
+        let size = 4096; // size of compression test file.
+        let output = Command::new("gzip")
+            .arg("compression.test")
+            .output()
+            .expect("Failed to execute command");
+
+        assert_eq!(4096, size);
+        assert_eq!(output.stdout.len() < 4096, true);
+
+        let output = Command::new("gzip")
+            .arg("-l")
+            .arg("compression.test.gz")
+            .output()
+            .expect("Failed to execute command");
+        let output = String::from_utf8_lossy(&output.stdout);
+        let output: Vec<&str> = output.split_whitespace().collect();
+        let compressedsize = output[4].parse::<u32>().unwrap();
+        let uncompressedsize = output[5].parse::<u32>().unwrap();
+
+        println!("compressed: {:?}, uncompressed: {:?}", compressedsize, uncompressedsize);
+        assert_eq!(compressedsize < uncompressedsize, true);
+        //uncompress the file
+        let output = Command::new("gzip")
+            .arg("-d")
+            .arg("compression.test.gz")
+            .output()
+            .expect("Failed to execute command");
+        assert_eq!(output.status.success(), true);
     }
 }
