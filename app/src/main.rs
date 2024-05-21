@@ -73,6 +73,12 @@ encrypt(buffer: &mut Vec<String>, key: String)
     println!("public key: {:?}", keypair);
 }
 
+fn
+compress(buffer: Vec<u8>, level: u8) -> Vec<u8> {
+    let result: Vec<u8> = zstd::stream::encode_all(&buffer[..], 3).unwrap();
+    result
+}
+
 fn 
 collector(log: Log) 
 {
@@ -248,35 +254,26 @@ mod tests {
     }
 
     #[test]
-    fn test_compression() {
-        use std::process::Command;
+    fn test_compress() {
+        use crate::compress;
+        use std::io::Read;
         let size = 4096; // size of compression test file.
-        let output = Command::new("gzip")
-            .arg("compression.test")
-            .output()
-            .expect("Failed to execute command");
-
-        assert_eq!(4096, size);
-        assert_eq!(output.stdout.len() < 4096, true);
-
-        let output = Command::new("gzip")
-            .arg("-l")
-            .arg("compression.test.gz")
-            .output()
-            .expect("Failed to execute command");
-        let output = String::from_utf8_lossy(&output.stdout);
-        let output: Vec<&str> = output.split_whitespace().collect();
-        let compressedsize = output[4].parse::<u32>().unwrap();
-        let uncompressedsize = output[5].parse::<u32>().unwrap();
-
-        println!("compressed: {:?}, uncompressed: {:?}", compressedsize, uncompressedsize);
-        assert_eq!(compressedsize < uncompressedsize, true);
-        //uncompress the file
-        let output = Command::new("gzip")
-            .arg("-d")
-            .arg("compression.test.gz")
-            .output()
-            .expect("Failed to execute command");
-        assert_eq!(output.status.success(), true);
+        let mut file = std::fs::File::open("compression.test").unwrap();
+        let mut buffer = vec![0; size];
+        let orginal_size = buffer.len();
+        file.read(&mut buffer).unwrap();
+        let result: Vec<u8> = compress(buffer, 3);
+        println!("test general compression");
+        assert_eq!(result.len() < orginal_size, true); 
+        println!("general compression passed");
+        println!("test 50% compression");
+        assert_eq!(result.len() < orginal_size / 2, true);
+        println!("50% compression passed");
+        println!("test 40% compression");
+        assert_eq!(result.len() < (5 * orginal_size) / 2, true);
+        println!("40% compression passed");
+        println!("test 30% compression");
+        assert_eq!(result.len() < orginal_size / 3, true);
     }
+
 }
