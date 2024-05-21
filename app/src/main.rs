@@ -74,9 +74,32 @@ encrypt(buffer: &mut Vec<String>, key: String)
 }
 
 fn
-compress(buffer: Vec<u8>, level: u8) -> Vec<u8> {
+compress(buffer: Vec<u8>, level: u8) -> Vec<u8> 
+{
     let result: Vec<u8> = zstd::stream::encode_all(&buffer[..], 3).unwrap();
     result
+}
+
+fn 
+transmit(buffer: Vec<String>) -> std::io::Result<()> 
+{
+    //let mut stream = TcpStream::connect("127.0.0.1:5001")?;
+    // this header information contains the name of the directory to save the file to.
+    // Example: if the transfer inverval is set to every hour, the directory name will be the 
+    // current date and the child files will be saved in that directory.
+    //stream.write_all(b"send over header information")?;
+    //let mut buffer = [0; 1024];
+    //stream.read(&mut buffer)?;
+    //println!("Received: {}", String::from_utf8_lossy(&buffer));
+    thread::spawn( move || {
+        println!("{:?}", &buffer[5..9]);
+        println!("{buffer:?}");
+    });
+    println!("call encrypt");
+    println!("call compress");
+    println!("send");
+
+    Ok(())
 }
 
 fn 
@@ -99,10 +122,14 @@ collector(log: Log)
 
         for line in reader.lines() {
             if let Ok(line) = line {
+                println!("size of line: {}", line.len());
+                println!("size of buffer contents: {:?}", buffer);
                 if line.len() + buffer.len() < cap {
                     buffer.push(line);
                 } else {
-                    encrypt(&mut buffer, "secretkey".to_string());
+                    //encrypt(&mut buffer, "secretkey".to_string());
+                    let b = buffer.to_vec();
+                    transmit(b);                    
                     buffer.clear();
                 } 
             } else {
@@ -128,7 +155,6 @@ read_config() -> Config
 fn 
 watch_logs() -> Arc<Mutex<bool>> 
 {
-
     let config : Config = read_config();
     let terminate_flag = Arc::new(Mutex::new(false));
     let terminate_flag_clone = Arc::clone(&terminate_flag);
@@ -138,21 +164,6 @@ watch_logs() -> Arc<Mutex<bool>>
         collector(log);
     }
     terminate_flag
-}
-
-fn 
-transmit() -> std::io::Result<()> 
-{
-    let mut stream = TcpStream::connect("127.0.0.1:5001")?;
-    // this header information contains the name of the directory to save the file to.
-    // Example: if the transfer inverval is set to every hour, the directory name will be the 
-    // current date and the child files will be saved in that directory.
-    stream.write_all(b"send over header information")?;
-    let mut buffer = [0; 1024];
-    stream.read(&mut buffer)?;
-    println!("Received: {}", String::from_utf8_lossy(&buffer));
-
-    Ok(())
 }
 
 fn 
@@ -274,6 +285,12 @@ mod tests {
         println!("40% compression passed");
         println!("test 30% compression");
         assert_eq!(result.len() < orginal_size / 3, true);
+        println!("30% compression passed");
     }
 
+    #[test]
+    fn test_log_file_exists() {
+        println!("write test to check if log file exists.");
+        println!("If it does not, put a wait flag for the file to exist.");
+    }
 }
