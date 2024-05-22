@@ -62,14 +62,12 @@ Config
 }
 
 fn
-encrypt(buffer: &mut Vec<String>, key: String) 
+encrypt(buffer: String, key: String)
 {
     println!("encryptbuffer ... {:?}", buffer);
     let keypair = Rsa::generate(2048).unwrap();
     let keypair = PKey::from_rsa(keypair).unwrap();
     // convert a vector of strings to a single string
-    let s: String = buffer.join("");
-    println!("string: {:?}", s);
     println!("public key: {:?}", keypair);
 }
 
@@ -92,9 +90,8 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //stream.read(&mut buffer)?;
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
     thread::spawn( move || {
-        //println!("{:?}", &buffer[5..9]);
-        println!("length of buffer: {:?}", buffer.len());
-        println!("{buffer:?}");
+        println!("call encrypt for: {:?}", buffer);
+        //encrypt(buffer, "secretkey".to_string());
     });
     println!("call encrypt");
     println!("call compress");
@@ -116,23 +113,25 @@ collector(log: Log)
         let tail_stdout = tail_process.stdout.take().unwrap();
 
         let reader = io::BufReader::new(tail_stdout);
-
-        //let cap = 4096;
-        let cap = 10;
-        let mut buffer: Vec<String> = Vec::with_capacity(cap); 
+        
+        // read byte cap from config file.
+        let cap = 16;
+        let mut buffer: Vec<String> = Vec::with_capacity(cap);
+        let mut size = 0;
 
         for line in reader.lines() {
             if let Ok(line) = line {
-                println!("size of line: {}", line.len());
-                println!("size of buffer contents: {:?}", buffer);
-                if line.len() + buffer.len() < cap {
-                    buffer.push(line);
+                if line.len() + size < cap {
+                    buffer.push(line.to_string());
                 } else {
-                    //encrypt(&mut buffer, "secretkey".to_string());
                     let b = buffer.to_vec();
                     transmit(b);                    
                     buffer.clear();
+                    buffer.push(line.to_string());
+                    size = 0;
                 } 
+                size += line.len();
+                println!("{:?}, {size}", buffer);
             } else {
                 // write to error log file perhaps
                 println!("Error reading line");
