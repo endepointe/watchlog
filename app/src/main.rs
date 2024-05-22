@@ -92,7 +92,8 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //stream.read(&mut buffer)?;
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
     thread::spawn( move || {
-        println!("{:?}", &buffer[5..9]);
+        //println!("{:?}", &buffer[5..9]);
+        println!("length of buffer: {:?}", buffer.len());
         println!("{buffer:?}");
     });
     println!("call encrypt");
