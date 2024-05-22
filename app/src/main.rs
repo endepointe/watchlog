@@ -91,7 +91,8 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
     thread::spawn( move || {
         println!("call encrypt for: {:?}", buffer);
-        //encrypt(buffer, "secretkey".to_string());
+        let buffer = buffer.join("");
+        encrypt(&buffer, "secretkey".to_string());
     });
     println!("call encrypt");
     println!("call compress");
