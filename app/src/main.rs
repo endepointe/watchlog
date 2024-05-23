@@ -61,14 +61,30 @@ Config
     defaults: Defaults,
 }
 
+
+// function that writes to an error log
 fn
-encrypt(buffer: &String, key: String)
+write_error_log(message: String) 
 {
+    let mut file = OpenOptions::new().append(true).open("error.log").unwrap();
+    file.write_all(message.as_bytes()).unwrap();
+}
+
+fn
+encrypt(buffer: &String) -> String 
+{
+    // open the key file and read the key
+    let private_key = fs::read("private.pem").unwrap();
+    println!("private key: {:?}", private_key);
+
     println!("encryptbuffer ... {:?}", buffer);
     let keypair = Rsa::generate(2048).unwrap();
+    println!("keypair: {:?}", keypair);
     let keypair = PKey::from_rsa(keypair).unwrap();
     // convert a vector of strings to a single string
     println!("public key: {:?}", keypair);
+    let mut encrypter = Encrypter::new(&keypair).unwrap();
+    String::from("encrypted")
 }
 
 fn
@@ -91,12 +107,15 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
     let (tx,rx) = std::sync::mpsc::sync_channel::<u8>(1);
     println!("{:?} {:?}", tx,rx);
+    thread::sleep(Duration::from_secs(5));  
     tx.send(3).unwrap();
+    println!("sent 3 to channel");
+
     thread::spawn( move || {
         tx.send(5).unwrap();
         println!("call encrypt for: {:?}", buffer);
         let buffer = buffer.join("");
-        encrypt(&buffer, "secretkey".to_string());
+        encrypt(&buffer);
     });
     println!("recvd: {}",rx.recv().unwrap());
     println!("recvd: {}",rx.recv().unwrap());
@@ -129,16 +148,6 @@ collector(log: Log)
         for line in reader.lines() {
             if let Ok(line) = line {
                 if line.len() + size < cap {
-                    // check if the line is greater than 50% of the buffer. 
-                    // If it is, divide the line into two strings and push
-                    // them into the buffer.
-                    println!("line length: {}", line.len());
-                    if line.len() >= cap / 2 {
-                        let s1 = cap / 2;
-                        let s2 = cap - s1;
-                        println!("testing divide line length {} - {} = {}", cap, s1, s2);
-                        println!("{:?}", &line[..5]);
-                    }
                     buffer.push(line.to_string());
                 } else {
                     let b = buffer.to_vec();
@@ -148,10 +157,8 @@ collector(log: Log)
                     size = 0;
                 } 
                 size += line.len();
-                println!("{:?}, {size}", buffer);
             } else {
-                // write to error log file perhaps
-                println!("Error reading line");
+                write_error_log(line.unwrap());
             }
         }
         let _ = tail_process.wait();
@@ -279,6 +286,13 @@ mod tests {
         //let stop_interval = start_interval(Some("1m".to_string()));
         let stop_buffer = set_tx_buffer(None);
         println!("{:?}", stop_buffer);
+    }
+
+    #[test]
+    fn test_encrypt() {
+        use crate::encrypt;
+        let buffer = "hello world".to_string();
+        //let enc = encrypt(&buffer);
     }
 
     #[test]

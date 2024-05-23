@@ -18,3 +18,7 @@ zstd = "0.13.1"
 name = "server"
 path = "src/server.rs"
 
+
+[[bin]]
+name = "generate"
+path = "src/generate.rs"
