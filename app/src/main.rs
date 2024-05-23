@@ -62,7 +62,7 @@ Config
 }
 
 fn
-encrypt(buffer: String, key: String)
+encrypt(buffer: &String, key: String)
 {
     println!("encryptbuffer ... {:?}", buffer);
     let keypair = Rsa::generate(2048).unwrap();
@@ -89,11 +89,17 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //let mut buffer = [0; 1024];
     //stream.read(&mut buffer)?;
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
+    let (tx,rx) = std::sync::mpsc::sync_channel::<u8>(1);
+    println!("{:?} {:?}", tx,rx);
+    tx.send(3).unwrap();
     thread::spawn( move || {
+        tx.send(5).unwrap();
         println!("call encrypt for: {:?}", buffer);
         let buffer = buffer.join("");
         encrypt(&buffer, "secretkey".to_string());
     });
+    println!("recvd: {}",rx.recv().unwrap());
+    println!("recvd: {}",rx.recv().unwrap());
     println!("call encrypt");
     println!("call compress");
     println!("send");
@@ -123,6 +129,16 @@ collector(log: Log)
         for line in reader.lines() {
             if let Ok(line) = line {
                 if line.len() + size < cap {
+                    // check if the line is greater than 50% of the buffer. 
+                    // If it is, divide the line into two strings and push
+                    // them into the buffer.
+                    println!("line length: {}", line.len());
+                    if line.len() >= cap / 2 {
+                        let s1 = cap / 2;
+                        let s2 = cap - s1;
+                        println!("testing divide line length {} - {} = {}", cap, s1, s2);
+                        println!("{:?}", &line[..5]);
+                    }
                     buffer.push(line.to_string());
                 } else {
                     let b = buffer.to_vec();
