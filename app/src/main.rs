@@ -74,15 +74,31 @@ encrypt(buffer: &String) -> String
 {
     // open the key file and read the key
     let private_key = fs::read("private.pem").unwrap();
-    println!("private key: {:?}", private_key);
+    let public_key = fs::read("public.pem").unwrap();
+    //println!("private key: {:?}", private_key);
+    //println!("public key: {:?}", public_key);
 
-    println!("encryptbuffer ... {:?}", buffer);
-    let keypair = Rsa::generate(2048).unwrap();
-    println!("keypair: {:?}", keypair);
-    let keypair = PKey::from_rsa(keypair).unwrap();
-    // convert a vector of strings to a single string
-    println!("public key: {:?}", keypair);
-    let mut encrypter = Encrypter::new(&keypair).unwrap();
+    let pkey = Rsa::private_key_from_pem(&private_key).unwrap();
+    let key = Rsa::public_key_from_pem(&public_key).unwrap();
+
+    println!("buffer: {:?}", buffer);
+    //println!("buffer as bytes: {:?}", buffer.as_bytes());
+
+    let mut buf = vec![0; key.size() as usize];
+    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1).unwrap();
+
+    println!("encrypted: {:?}", buf);
+    //match std::str::from_utf8(&buf) {
+    //    Ok(v) => {
+    //        println!("encrypted: {:?}", v);
+    //        return v.to_string();
+    //    },
+    //    Err(e) => {
+    //        println!("Error: {:?}", e);
+    //        return "".to_string();
+    //    }
+    //}
+
     String::from("encrypted")
 }
 
@@ -104,17 +120,10 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     //let mut buffer = [0; 1024];
     //stream.read(&mut buffer)?;
     //println!("Received: {}", String::from_utf8_lossy(&buffer));
-    let (tx,rx) = std::sync::mpsc::sync_channel::<u8>(1);
-    println!("{:?} {:?}", tx,rx);
-    thread::sleep(Duration::from_secs(5));  
-    tx.send(3).unwrap();
-    println!("sent 3 to channel");
-
+    let (tx,rx) = std::sync::mpsc::sync_channel::<String>(1);
+    println!("encrypting buffer...");
     thread::spawn( move || {
-        tx.send(5).unwrap();
-        println!("call encrypt for: {:?}", buffer);
-        let buffer = buffer.join("");
-        encrypt(&buffer);
+        encrypt(&buffer.join("\n"));
     });
     println!("recvd: {}",rx.recv().unwrap());
     println!("recvd: {}",rx.recv().unwrap());
