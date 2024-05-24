@@ -23,8 +23,7 @@ Source
     path: String
 }
 
-/* Use ipv4 for now. In the future, detect the type of address.
- */
+/* Use ipv4 for now. In the future, detect the type of address. */
 #[derive(Debug,Deserialize)]
 struct 
 Destination 
