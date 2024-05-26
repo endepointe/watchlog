@@ -123,9 +123,9 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     let (tx,rx) = std::sync::mpsc::sync_channel::<String>(1);
     println!("encrypting buffer...");
     thread::spawn( move || {
-        encrypt(&buffer.join("\n"));
+        let enc = encrypt(&buffer.join("\n"));
+        tx.send(enc).unwrap();
     });
-    println!("recvd: {}",rx.recv().unwrap());
     println!("recvd: {}",rx.recv().unwrap());
     println!("call encrypt");
     println!("call compress");
