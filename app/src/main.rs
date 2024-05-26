@@ -75,7 +75,15 @@ write_error_log(message: String)
 }
 
 fn
-encrypt(buffer: &String) -> Vec<u8>  
+write_status_log(message: String) 
+{
+    let message = format!("{}: {}\n", chrono::Local::now().to_string(), message);
+    let mut file = OpenOptions::new().append(true).create(true).open("status.log").unwrap();
+    file.write_all(message.as_bytes()).unwrap();
+}
+
+fn
+encrypt(buffer: Vec<String>) -> Vec<u8>  
 {
     let private_key = fs::read("private.pem").unwrap();
     let public_key = fs::read("public.pem").unwrap();
@@ -84,9 +92,10 @@ encrypt(buffer: &String) -> Vec<u8>
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
-    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
+    // resume here this afternoon
+    let enc_len = key.public_encryt(&buffer.to_string().as_bytes(), &mut buf, Padding::PKCS1);
     
-    dbg_print(format!("Encrypted buffer: {:?}", buf), file!(), line!());
+    //dbg_print(format!("Encrypted buffer: {:?}", buf), file!(), line!());
 
     match enc_len {
         Ok(v) => {
@@ -116,10 +125,11 @@ send(buffer: Vec<u8>)
 fn 
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
+    dbg_print(buffer.join("\n"), file!(), line!());
+
     let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(0);
-    println!("encrypting buffer...");
     thread::spawn( move || {
-        let enc = encrypt(&buffer.join("\n"));
+        let enc = encrypt(buffer);
         tx.send(enc).unwrap();
     });
     match rx.recv() {
@@ -220,7 +230,6 @@ main()
 {
     let terminate_flag = watch_logs();
     io::stdout().flush().unwrap();  
-    println!("{}",std::process::id());
 
     /* Register signal handlers 
      * Overall, the watch-log binary will be controlled by systemd. These signals become useful
@@ -237,19 +246,19 @@ main()
     signal_hook::flag::register(signal_hook::consts::SIGUSR1, Arc::clone(&sigusr1));
     signal_hook::flag::register(signal_hook::consts::SIGUSR2, Arc::clone(&sigusr2));
 
-    println!("Starting watch-log ...");
+    write_status_log("Starting watch-log ...".to_string());
 
     while !*terminate_flag.lock().unwrap() {
         io::stdout().flush().unwrap();
         if sigquit.load(Ordering::Relaxed) {
-            println!("SIGQUIT signal received.");
+            write_status_log("SIGQUIT signal received.".to_string());
             *terminate_flag.lock().unwrap() = true;
         }
         if sigusr1.load(Ordering::Relaxed) {
-            println!("SIGUSR1 signal received ... Continue running.");
+            write_status_log("SIGUSR1 signal received ... Continue running.".to_string());
         }
         if sigusr2.load(Ordering::Relaxed) {
-            println!("SIGUSR2 signal received ... Continue running.");
+            write_status_log("SIGUSR2 signal received ... Continue running.".to_string());
         }
         thread::sleep(Duration::from_secs(1));
     }
@@ -257,14 +266,13 @@ main()
     // terminate task gracefully
     thread::sleep(Duration::from_secs(1));
     io::stdout().flush().unwrap();
-    println!("Main function terminated.");
+    write_status_log("Main function terminated.".to_string());
 }
 
-// Test the memory consumption of the running program over a 1 minute period.
 mod tests {
     #[test]
     fn test_memory_consumption() {
-        println!("tests memory consumption");
+        println!("tests memory consumption over a period of time.");
     }
 
     #[test]
@@ -285,14 +293,12 @@ mod tests {
 
     #[test]
     fn test_systemd_file() {
-        // the unit file no longer needs to redirect output to output.log
         println!("test systemd file");
     }
 
     #[test]
     fn test_start_interval() {
         use crate::set_tx_buffer;
-        //let stop_interval = start_interval(Some("1m".to_string()));
         let stop_buffer = set_tx_buffer(None);
         println!("{:?}", stop_buffer);
     }
@@ -301,7 +307,8 @@ mod tests {
     fn test_encrypt() {
         use crate::encrypt;
         let buffer = "hello world".to_string();
-        //let enc = encrypt(&buffer);
+        let enc = encrypt(&buffer);
+        println!("{:?}", enc);
     }
 
     #[test]

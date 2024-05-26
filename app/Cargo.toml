@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.38"
-#openssl = "0.10.64"
 openssl = { version = "0.10.64", features = ["vendored"] }
 rand = "0.8.5"
 serde = { version = "1.0", features = ["derive"] }
@@ -16,8 +15,8 @@ signal-hook = "0.3.17"
 zstd = "0.13.1"
 
 [[bin]]
-name = "server"
-path = "src/server.rs"
+name = "storage-controller"
+path = "src/storage-controller.rs"
 
 
 [[bin]]
