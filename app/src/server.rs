@@ -6,6 +6,7 @@ use std::fs::File;
 fn handle_client(mut stream: TcpStream) {
     println!("New client connected: {:?}", stream);
     // replace file.txt with the header information sent from the client
+    // replace with openoptions
     let mut file = File::create("file.txt").unwrap();
     let mut buffer = [0; 1024];
     loop {

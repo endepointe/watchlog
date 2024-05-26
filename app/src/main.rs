@@ -60,46 +60,43 @@ Config
     defaults: Defaults,
 }
 
+fn 
+dbg_print(value: String, file: &str, line: u32) 
+{
+    println!("{}:{}: {}", file, line, value);
+}
 
-// function that writes to an error log
 fn
 write_error_log(message: String) 
 {
-    let mut file = OpenOptions::new().append(true).open("error.log").unwrap();
+    let message = format!("{}: {}\n", chrono::Local::now().to_string(), message);
+    let mut file = OpenOptions::new().append(true).create(true).open("error.log").unwrap();
     file.write_all(message.as_bytes()).unwrap();
 }
 
 fn
-encrypt(buffer: &String) -> String 
+encrypt(buffer: &String) -> Vec<u8>  
 {
-    // open the key file and read the key
     let private_key = fs::read("private.pem").unwrap();
     let public_key = fs::read("public.pem").unwrap();
-    //println!("private key: {:?}", private_key);
-    //println!("public key: {:?}", public_key);
 
     let pkey = Rsa::private_key_from_pem(&private_key).unwrap();
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
-    println!("buffer: {:?}", buffer);
-    //println!("buffer as bytes: {:?}", buffer.as_bytes());
-
     let mut buf = vec![0; key.size() as usize];
-    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1).unwrap();
+    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
+    
+    dbg_print(format!("Encrypted buffer: {:?}", buf), file!(), line!());
 
-    println!("encrypted: {:?}", buf);
-    //match std::str::from_utf8(&buf) {
-    //    Ok(v) => {
-    //        println!("encrypted: {:?}", v);
-    //        return v.to_string();
-    //    },
-    //    Err(e) => {
-    //        println!("Error: {:?}", e);
-    //        return "".to_string();
-    //    }
-    //}
-
-    String::from("encrypted")
+    match enc_len {
+        Ok(v) => {
+            return buf;
+        },
+        Err(e) => {
+            write_error_log(e.to_string());
+            return vec![0];
+        }
+    }
 }
 
 fn
@@ -109,27 +106,31 @@ compress(buffer: Vec<u8>, level: u8) -> Vec<u8>
     result
 }
 
+fn
+send(buffer: Vec<u8>) 
+{
+    let mut stream = TcpStream::connect("127.0.0.1:5001").unwrap();
+    stream.write_all(&buffer).unwrap();
+}
+
 fn 
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
-    //let mut stream = TcpStream::connect("127.0.0.1:5001")?;
-    // this header information contains the name of the directory to save the file to.
-    // Example: if the transfer inverval is set to every hour, the directory name will be the 
-    // current date and the child files will be saved in that directory.
-    //stream.write_all(b"send over header information")?;
-    //let mut buffer = [0; 1024];
-    //stream.read(&mut buffer)?;
-    //println!("Received: {}", String::from_utf8_lossy(&buffer));
-    let (tx,rx) = std::sync::mpsc::sync_channel::<String>(1);
+    let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(0);
     println!("encrypting buffer...");
     thread::spawn( move || {
         let enc = encrypt(&buffer.join("\n"));
         tx.send(enc).unwrap();
     });
-    println!("recvd: {}",rx.recv().unwrap());
-    println!("call encrypt");
-    println!("call compress");
-    println!("send");
+    match rx.recv() {
+        Ok(v) => {
+            let msg: Vec<u8> = compress(v, 3);
+            send(msg);
+        },
+        Err(e) => {
+            write_error_log(e.to_string());
+        }
+    }
 
     Ok(())
 }
