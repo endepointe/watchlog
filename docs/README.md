@@ -132,14 +132,14 @@ S[(StorageController)] --> l1(logs/auth/)
 S --> l2(logs/syslog/)
 S --> l3(logs/messages/)
 S --> l4(logs/secure/)
-l1 --> yyyy-mm-dd-00-01
-l1 --> yyyy-mm-dd-02-03
-l2 --> yyyy-mm-dd-03-04
-l2 --> yyyy-mm-dd-05-06
-l3 --> yyyy-mm-dd-21-22
-l3 --> yyyy-mm-dd-23-24
-l4 --> yyyy-mm-dd-07-08
-l4 --> yyyy-mm-dd-09-10
+l1 --> h1(yyyy-mm-dd-hh-mm)
+l1 --> h1(yyyy-mm-dd-hh-mm)
+l2 --> h2(yyyy-mm-dd-hh-mm)
+l2 --> h2(yyyy-mm-dd-hh-mm)
+l3 --> h3(yyyy-mm-dd-hh-mm)
+l3 --> h3(yyyy-mm-dd-hh-mm)
+l4 --> h4(yyyy-mm-dd-hh-mm)
+l4 --> h5(yyyy-mm-dd-hh-mm)
 ```
 
 ```mermaid
