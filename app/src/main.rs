@@ -362,7 +362,7 @@ mod tests {
         println!("{:?}", dec_len);
         println!("{:?}", buf);
         // convert the decrypted buffer to a string
-        let result = std::str::from_utf8(&buf).unwrap();
+        let result = std::str::from_utf8(&buf[..dec_len]).unwrap();
         println!("{:?}", result);
     }
 }

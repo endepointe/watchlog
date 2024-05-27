@@ -122,6 +122,33 @@ Col --> Enc(Encrypt)
 Enc --> Cmpr(Compress)
 Cmpr --> Tx(Transmit)
 Tx --> |purge| Col 
-Tx --> Srv(Server)
-Srv --> S[(Storage)]
+Tx --> S[(StorageController)]
 ``` 
+
+
+```mermaid
+graph LR
+S[(StorageController)] --> logs/auth/
+S --> logs/syslog/
+S --> logs/messages/
+S --> logs/secure/
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
