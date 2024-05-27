@@ -128,18 +128,18 @@ Tx --> S[(StorageController)]
 
 ```mermaid
 graph LR
-S[(StorageController)] --> la(logs/auth/)
-S --> ls(logs/syslog/)
-S --> lm(logs/messages/)
-S --> ls(logs/secure/)
-la --> yyyy-mm-dd-00-01
-la --> yyyy-mm-dd-02-03
-ls --> yyyy-mm-dd-03-04
-ls --> yyyy-mm-dd-05-06
-lm --> yyyy-mm-dd-21-22
-lm --> yyyy-mm-dd-23-24
-ls --> yyyy-mm-dd-07-08
-ls --> yyyy-mm-dd-09-10
+S[(StorageController)] --> l1(logs/auth/)
+S --> l2(logs/syslog/)
+S --> l3(logs/messages/)
+S --> l4(logs/secure/)
+l1 --> yyyy-mm-dd-00-01
+l1 --> yyyy-mm-dd-02-03
+l2 --> yyyy-mm-dd-03-04
+l2 --> yyyy-mm-dd-05-06
+l3 --> yyyy-mm-dd-21-22
+l3 --> yyyy-mm-dd-23-24
+l4 --> yyyy-mm-dd-07-08
+l4 --> yyyy-mm-dd-09-10
 ```
 
 ```mermaid
