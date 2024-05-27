@@ -83,7 +83,7 @@ write_status_log(message: String)
 }
 
 fn
-encrypt(buffer: Vec<String>) -> Vec<u8>  
+encrypt(buffer: String) -> Vec<u8>  
 {
     let private_key = fs::read("private.pem").unwrap();
     let public_key = fs::read("public.pem").unwrap();
@@ -92,10 +92,17 @@ encrypt(buffer: Vec<String>) -> Vec<u8>
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
-    // resume here this afternoon
-    let enc_len = key.public_encryt(&buffer.to_string().as_bytes(), &mut buf, Padding::PKCS1);
+    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
     
     //dbg_print(format!("Encrypted buffer: {:?}", buf), file!(), line!());
+    //dbg_print(format!("Encrypted buffer length: {:?}", enc_len), file!(), line!());
+
+    // decompress the file using zstd
+    //let decompressed = zstd::stream::decode_all(&buf[..]).unwrap();
+    // decrupt the decompressed data
+    //let mut buf = vec![0; pkey.size() as usize];
+    //let dec_len = pkey.private_decrypt(&decompressed, &mut buf, Padding::PKCS1).unwrap();
+    //dbg_print(format!("Decrypted buffer: {:?}", buf), file!(), line!());
 
     match enc_len {
         Ok(v) => {
@@ -125,11 +132,10 @@ send(buffer: Vec<u8>)
 fn 
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
-    dbg_print(buffer.join("\n"), file!(), line!());
-
-    let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(0);
+    let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(1);
     thread::spawn( move || {
-        let enc = encrypt(buffer);
+        dbg_print(buffer.join(","), file!(), line!());
+        let enc = encrypt(buffer.join(","));
         tx.send(enc).unwrap();
     });
     match rx.recv() {
@@ -160,7 +166,7 @@ collector(log: Log)
         let reader = io::BufReader::new(tail_stdout);
         
         // read byte cap from config file.
-        let cap = 16;
+        let cap = 256;
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
 
@@ -306,9 +312,9 @@ mod tests {
     #[test]
     fn test_encrypt() {
         use crate::encrypt;
-        let buffer = "hello world".to_string();
-        let enc = encrypt(&buffer);
-        println!("{:?}", enc);
+        let buffer = "Hello World".to_string();
+        let result = encrypt(buffer);
+        println!("{:?}", result);
     }
 
     #[test]
@@ -339,5 +345,24 @@ mod tests {
     fn test_log_file_exists() {
         println!("write test to check if log file exists.");
         println!("If it does not, put a wait flag for the file to exist.");
+    }
+
+    #[test]
+    fn test_decryption() {
+        use openssl::encrypt::Decrypter; 
+        println!("test decryption of the existing encrypted file: file.txt.");
+        let private_key = std::fs::read("private.pem").unwrap();
+        let file = std::fs::read("file.txt").unwrap();
+        let pkey = openssl::rsa::Rsa::private_key_from_pem(&private_key).unwrap();
+        // decompress the file using zstd
+        let decompressed = zstd::stream::decode_all(&file[..]).unwrap();
+        // decrupt the decompressed data
+        let mut buf = vec![0; pkey.size() as usize];
+        let dec_len = pkey.private_decrypt(&decompressed, &mut buf, openssl::rsa::Padding::PKCS1).unwrap();
+        println!("{:?}", dec_len);
+        println!("{:?}", buf);
+        // convert the decrypted buffer to a string
+        let result = std::str::from_utf8(&buf).unwrap();
+        println!("{:?}", result);
     }
 }
