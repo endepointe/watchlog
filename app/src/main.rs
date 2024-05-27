@@ -10,6 +10,7 @@ use std::time::Duration;
 use std::thread;
 use std::process::{Command, Stdio};
 use serde::Deserialize;
+use serde::Serialize;
 
 use openssl::encrypt::{Encrypter, Decrypter};
 use openssl::rsa::{Rsa, Padding};
@@ -60,10 +61,38 @@ Config
     defaults: Defaults,
 }
 
+#[derive(Debug, Serialize)]
+struct
+Header
+{
+    name: String,
+    date: String,
+}
+
 fn 
 dbg_print(value: String, file: &str, line: u32) 
 {
     println!("{}:{}: {}", file, line, value);
+}
+
+fn
+add_header(name: &String) -> String 
+{
+    let n = Path::new(name).file_name().unwrap().to_str().unwrap();
+    let header = Header {
+        name: String::from(n),
+        date: format_date(),
+    };
+    let header = serde_json::to_string(&header).unwrap();
+    header
+}
+
+fn
+format_date() -> String 
+{
+    let date = chrono::Local::now();
+    let date = date.format("%Y-%m-%d-%H-%M");
+    date.to_string()
 }
 
 fn
@@ -94,16 +123,6 @@ encrypt(buffer: String) -> Vec<u8>
     let mut buf = vec![0; key.size() as usize];
     let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
     
-    //dbg_print(format!("Encrypted buffer: {:?}", buf), file!(), line!());
-    //dbg_print(format!("Encrypted buffer length: {:?}", enc_len), file!(), line!());
-
-    // decompress the file using zstd
-    //let decompressed = zstd::stream::decode_all(&buf[..]).unwrap();
-    // decrupt the decompressed data
-    //let mut buf = vec![0; pkey.size() as usize];
-    //let dec_len = pkey.private_decrypt(&decompressed, &mut buf, Padding::PKCS1).unwrap();
-    //dbg_print(format!("Decrypted buffer: {:?}", buf), file!(), line!());
-
     match enc_len {
         Ok(v) => {
             return buf;
@@ -133,6 +152,9 @@ fn
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
     let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(1);
+    let bufferheader = buffer[0].as_bytes();
+    let buffer = buffer[1..].to_vec();
+
     thread::spawn( move || {
         dbg_print(buffer.join(","), file!(), line!());
         let enc = encrypt(buffer.join(","));
@@ -141,6 +163,9 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     match rx.recv() {
         Ok(v) => {
             let msg: Vec<u8> = compress(v, 3);
+            let mut msg = [bufferheader, &msg].concat();
+            println!("{:?}", msg.len());
+            println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
             send(msg);
         },
         Err(e) => {
@@ -169,6 +194,8 @@ collector(log: Log)
         let cap = 256;
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
+        let header = add_header(&path);
+        buffer.push(header);
 
         for line in reader.lines() {
             if let Ok(line) = line {
@@ -178,6 +205,8 @@ collector(log: Log)
                     let b = buffer.to_vec();
                     transmit(b);                    
                     buffer.clear();
+                    let header = add_header(&path);
+                    buffer.push(header);
                     buffer.push(line.to_string());
                     size = 0;
                 } 
@@ -365,4 +394,13 @@ mod tests {
         let result = std::str::from_utf8(&buf[..dec_len]).unwrap();
         println!("{:?}", result);
     }
+
+    #[test]
+    fn test_add_header() {
+        use crate::add_header;
+        use serde::Serialize;
+        let result = add_header("path/to/test.log".to_string());
+        println!("{:?}", result);
+    }
 }
+
