@@ -136,8 +136,8 @@ la --> yyyy-mm-dd-00-01
 la --> yyyy-mm-dd-02-03
 ls --> yyyy-mm-dd-03-04
 ls --> yyyy-mm-dd-05-06
-lm --> yyyy-mm-dd-05-06
-lm --> yyyy-mm-dd-07-08
+lm --> yyyy-mm-dd-21-22
+lm --> yyyy-mm-dd-23-24
 ls --> yyyy-mm-dd-07-08
 ls --> yyyy-mm-dd-09-10
 ```
