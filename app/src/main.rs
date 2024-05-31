@@ -45,12 +45,12 @@ Log
 }
 
 trait LogHandler {
-    fn get_tx_buffer(&self) -> u32;
+    fn get_tx_buffer(&self) -> usize;
     fn get_source_path(&self) -> String;
     fn get_destination_address(&self) -> Ipv4Addr;
 }
 impl LogHandler for Log {
-    fn get_tx_buffer(&self) -> u32 {
+    fn get_tx_buffer(&self) -> usize {
         let mut bsize = 0;
         let val = self.tx_buffer.clone().unwrap_or("stream".to_string());
         match val.as_str() {
@@ -218,7 +218,7 @@ collector(log: Log)
         let reader = io::BufReader::new(tail_stdout);
         
         // read byte cap from config file.
-        let cap = 256;
+        let cap = log.get_tx_buffer();//256;
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
         let header = add_header(&path);
