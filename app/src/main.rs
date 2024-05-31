@@ -71,6 +71,7 @@ encrypt(buffer: String) -> Vec<u8>
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
+    println!("buffer before encrypting: {:?}", buffer);
     let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
     
     match enc_len {
