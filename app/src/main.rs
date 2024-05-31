@@ -45,10 +45,22 @@ Log
 }
 
 trait LogHandler {
+    fn get_tx_buffer(&self) -> u32;
     fn get_source_path(&self) -> String;
     fn get_destination_address(&self) -> Ipv4Addr;
 }
 impl LogHandler for Log {
+    fn get_tx_buffer(&self) -> u32 {
+        let mut bsize = 0;
+        let val = self.tx_buffer.clone().unwrap_or("stream".to_string());
+        match val.as_str() {
+            "1kb" => bsize = 1024,
+            "4kb" => bsize = 4096,
+            "1mb" => bsize = 1024 * 1024,
+            _ => bsize = 0, // stream the data
+        }
+        bsize
+    }
     fn get_source_path(&self) -> String {
         self.source.path.to_string()
     }
@@ -259,21 +271,6 @@ watch_logs() -> Arc<Mutex<bool>>
     terminate_flag
 }
 
-fn 
-set_tx_buffer(string: Option<String>) -> u32  
-{
-    let mut bsize = 0;
-    let val = string.unwrap_or("stream".to_string());
-
-    match val.as_str() {
-        "1kb" => bsize = 1024,
-        "4kb" => bsize = 4096,
-        "1mb" => bsize = 1024 * 1024,
-        _ => bsize = 0, // stream the data
-    }
-    
-    bsize
-}
 
 fn 
 unix_app() 
@@ -358,13 +355,6 @@ mod tests {
     }
 
     #[test]
-    fn test_start_interval() {
-        use crate::set_tx_buffer;
-        let stop_buffer = set_tx_buffer(None);
-        println!("{:?}", stop_buffer);
-    }
-
-    #[test]
     fn test_encrypt() {
         use crate::encrypt;
         let buffer = "Hello World".to_string();
@@ -405,9 +395,9 @@ mod tests {
     #[test]
     fn test_decryption() {
         use openssl::encrypt::Decrypter; 
-        println!("test decryption of the existing encrypted file: file.txt.");
+        println!("test decryption of the existing encrypted file: storage.test.");
         let private_key = std::fs::read("private.pem").unwrap();
-        let file = std::fs::read("file.txt").unwrap();
+        let file = std::fs::read("storage.test").unwrap();
         let pkey = openssl::rsa::Rsa::private_key_from_pem(&private_key).unwrap();
         // decompress the file using zstd
         let decompressed = zstd::stream::decode_all(&file[..]).unwrap();
@@ -425,7 +415,30 @@ mod tests {
     fn test_add_header() {
         use crate::add_header;
         use serde::Serialize;
-        let result = add_header("path/to/test.log".to_string());
+        let result = add_header(&"path/to/test.log".to_string());
+        println!("{:?}", result);
+    }
+
+    #[test]
+    fn test_get_tx_buffer() {
+        use crate::LogHandler;
+        use crate::Log;
+        use crate::Source;
+        use crate::Destination;
+        let log = Log {
+            source: Source {
+                name: "test".to_string(),
+                path: "path/to/test.log".to_string(),
+            },
+            destination: Destination {
+                address: std::net::Ipv4Addr::new(127,0,0,1),
+                port: 5001,
+            },
+            compression_level: Some(3),
+            key: Some("key".to_string()),
+            tx_buffer: Some("1kb".to_string()),
+        };
+        let result = log.get_tx_buffer();
         println!("{:?}", result);
     }
 }
