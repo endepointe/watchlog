@@ -44,6 +44,20 @@ Log
     tx_buffer: Option<String>,
 }
 
+trait LogHandler {
+    fn get_source_path(&self) -> String;
+    fn get_destination_address(&self) -> Ipv4Addr;
+}
+impl LogHandler for Log {
+    fn get_source_path(&self) -> String {
+        self.source.path.to_string()
+    }
+    fn get_destination_address(&self) -> Ipv4Addr {
+        self.destination.address
+    } 
+}
+
+// fallback values
 #[derive(Debug, Deserialize)]
 struct 
 Defaults 
@@ -179,7 +193,8 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
 fn 
 collector(log: Log) 
 {
-    let path = log.source.path.to_string();
+
+    let path = log.get_source_path();
 
     thread::spawn(move || {
         let mut tail_process = Command::new("tail")
@@ -261,7 +276,7 @@ set_tx_buffer(string: Option<String>) -> u32
 }
 
 fn 
-main() 
+unix_app() 
 {
     let terminate_flag = watch_logs();
     io::stdout().flush().unwrap();  
@@ -302,6 +317,17 @@ main()
     thread::sleep(Duration::from_secs(1));
     io::stdout().flush().unwrap();
     write_status_log("Main function terminated.".to_string());
+}
+
+
+fn 
+main() 
+{
+    if  cfg!(unix) {
+        unix_app();
+    } else {
+        println!("Windows not yet supported.");
+    }
 }
 
 mod tests {

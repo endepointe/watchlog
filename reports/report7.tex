@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={black},
+    citecolor={black},
+    urlcolor={black}
+}\geometry{a4paper, margin=1in}
+\setlength{\parindent}{0pt}
+
+\title{Progress Report\\[0.5em]
+\large WatchLog}
+\author{Alvin Johns\\
+CS463\\
+Date: May 17, 2024}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Individual Tasks}
+\subsection*{Completed (in the last seven days)}
+Created the main documentation for the project, laying out how information will move from one location to another. The transmit and server functions are in place, even if they have not been utilized. 
+The public wiki site is up and running, briefly detailing the project goals for this new codebase. 
+\begin{itemize}
+    \item Submitted \underline{\url{https://watchlog.wiki}}
+    \item Config file read and loaded into structs
+    \item Verified systemd controls binary on system start
+\end{itemize}
+
+\subsection*{Planned (for the next progress report)}
+\begin{itemize}
+    \item Collect and send logs to server
+    \item Server will organize the logs, similar to how zeek preserves logs 
+\end{itemize}
+
+\subsection*{Links to Issues or Pull Requests}
+\begin{itemize}
+    \item Main: \underline{\url{https://github.com/endepointe/watchlog}}
+\end{itemize}
+
+\section*{Open Questions, Concerns, or Blockers}
+\begin{itemize}
+    \item This still needs to do more than 'collect logs'
+    \item How does this differentiate itself?
+    \item How can I fit ebpf into this?
+    \item What are my lessons learned from building and documenting this project?
+    \item How can this become a product for good without becoming another security vulnerability?
+\end{itemize}
+
+\section*{Major Changes in Assets this Week}
+\begin{itemize}
+    \item The wiki domain added.
+\end{itemize}
+
+\end{document}
+
