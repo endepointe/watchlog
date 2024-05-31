@@ -1,7 +1,10 @@
+mod types;
+use crate::types::{Header};
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 use std::fs::File;
-
+use std::thread;
+use serde::{Deserialize};
 
 fn 
 handle_client(mut stream: TcpStream) 
@@ -22,7 +25,8 @@ handle_client(mut stream: TcpStream)
             }
             header.push(*byte as char);
         }
-        println!("Header: {:?}", header);
+        let header: Header = serde_json::from_str(&header).unwrap();
+        println!("Header: {:?}", &header);
         file.write(&buffer[..bytes_read]).unwrap();
     }
 }
@@ -34,7 +38,10 @@ main() -> std::io::Result<()>
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                handle_client(stream);
+                thread::spawn(|| {
+                    handle_client(stream);
+                });
+
             }
             Err(e) => {
                 eprintln!("Error: {}", e);

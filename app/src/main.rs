@@ -1,4 +1,7 @@
-#![allow(unused_imports)]
+mod types;
+use crate::types::{Config, Log, Source, Destination, Defaults, Header};
+
+#[allow(unused_imports)]
 use std::io::prelude::*;
 use std::io::{self, Read,Write, BufRead,BufReader};
 use std::fs::{self,File, OpenOptions};
@@ -15,80 +18,6 @@ use serde::Serialize;
 use openssl::encrypt::{Encrypter, Decrypter};
 use openssl::rsa::{Rsa, Padding};
 use openssl::pkey::PKey;
-
-#[derive(Debug,Deserialize)]
-struct 
-Source 
-{
-    name: String,
-    path: String
-}
-
-/* Use ipv4 for now. In the future, detect the type of address. */
-#[derive(Debug,Deserialize)]
-struct 
-Destination 
-{
-    address: Ipv4Addr,
-    port: u16
-}
-
-#[derive(Debug,Deserialize)]
-struct 
-Log 
-{
-    source: Source,
-    destination: Destination,
-    compression_level: Option<u8>,
-    key: Option<String>,
-    tx_buffer: Option<String>,
-}
-
-impl Log {
-    fn get_tx_buffer(&self) -> usize {
-        let mut bsize = 0;
-        let val = self.tx_buffer.clone().unwrap_or("stream".to_string());
-        match val.as_str() {
-            "1kb" => bsize = 1024,
-            "4kb" => bsize = 4096,
-            "1mb" => bsize = 1024 * 1024,
-            _ => bsize = 0, // stream the data
-        }
-        bsize
-    }
-    fn get_source_path(&self) -> String {
-        self.source.path.to_string()
-    }
-    fn get_destination_address(&self) -> Ipv4Addr {
-        self.destination.address
-    } 
-}
-
-// fallback values
-#[derive(Debug, Deserialize)]
-struct 
-Defaults 
-{
-    compression_level: u8,
-    key: String,
-    tx_buffer: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct 
-Config 
-{
-    logs: Vec<Log>,
-    defaults: Defaults,
-}
-
-#[derive(Debug, Serialize)]
-struct
-Header
-{
-    name: String,
-    date: String,
-}
 
 fn 
 dbg_print(value: String, file: &str, line: u32) 
