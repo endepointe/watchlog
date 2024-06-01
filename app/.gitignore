@@ -6,4 +6,7 @@
 *.dvi
 report3.pdf
 storage.test
+logs/
+error.log
+sources.log
 *.pem

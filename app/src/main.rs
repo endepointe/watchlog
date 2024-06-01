@@ -68,7 +68,6 @@ encrypt(buffer: String) -> Vec<u8>
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
-    //let mut buf: Vec<u8> = Vec::with_capacity(key.size() as usize);
     let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::NONE);
     
     match enc_len {
@@ -99,25 +98,17 @@ send(buffer: Vec<u8>)
 fn 
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
-    dbg_print(buffer.join(","), file!(), line!());
     let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(1);
-    let bufferheader = buffer[0].as_bytes();
-    let buffer = buffer[1..].to_vec();
+    let buffer = buffer[0..].to_vec();
 
     thread::spawn( move || {
-        let enc = encrypt(buffer.join(","));
-        tx.send(enc).unwrap();
+        //let enc = encrypt(...);
+        tx.send(buffer.join(",").into()).unwrap();
     });
     match rx.recv() {
         Ok(v) => {
-            println!("{:?}:{}:{}", &v, file!(), line!()); // not encrypting the message, regardless
-                                                          // of size. see error.log while running.
-                                                          // use: tail -f -n0 error.log
-            let msg: Vec<u8> = compress(v, 3);
-            let mut msg = [bufferheader, &msg].concat();
-            println!("{:?}", msg.len());
-            println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
-            send(msg);
+            //let msg: Vec<u8> = compress(..., 3);
+            send(v);
         },
         Err(e) => {
             write_error_log(e.to_string());
@@ -363,6 +354,38 @@ mod tests {
         };
         let result = log.get_tx_buffer();
         println!("{:?}", result);
+    }
+    
+    #[test]
+    fn test_send_data() {
+        use crate::send;
+        use crate::add_header;
+        
+        // Reqs:
+        //  - storage server must be running
+        //  - dummy.data must have data
+        //  - logs/name/yyyy-mm-dd/hh-hh  must exist
+        use std::io::prelude::*;
+        use std::fs::OpenOptions;
+        use std::thread;
+        use std::time::Duration;
+        let mut data = std::fs::File::open("dummy.data").unwrap();
+        let buf_reader = std::io::BufReader::new(data);
+        let data: Vec<_> = buf_reader
+            .lines()
+            .map(|line| line.unwrap())
+            .take_while(|line| !line.is_empty())
+            .collect();
+
+        for d in data {
+            println!("{:?}", d);
+            let header = add_header(&"test1.log".to_string());
+            let b: String = header + &d;
+            println!("{:?}", &b);
+            println!("{:?}", b.as_bytes());
+            send(b.as_bytes().to_vec()); 
+            thread::sleep(Duration::from_secs(2));
+        }
     }
 }
 
