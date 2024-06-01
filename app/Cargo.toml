@@ -22,3 +22,8 @@ path = "src/storage-controller.rs"
 [[bin]]
 name = "generate"
 path = "src/generate.rs"
+
+[[bin]]
+name = "decrypt"
+path = "src/decrypt.rs"
+

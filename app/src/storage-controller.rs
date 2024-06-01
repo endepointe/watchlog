@@ -24,7 +24,10 @@ route_data(header: &Header, data: &[u8])
     let f = format!("{}-{}", curr_hour.to_string(), next_hour.to_string());
 
     let full_path = format!("{}{}", date_dir, f);
-    let mut f = std::fs::OpenOptions::new().append(true).create(true).open(&full_path).unwrap();
+    let mut f = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .append(true).create(true).open(&full_path).unwrap();
 
     if let Err(e) = std::fs::metadata(&full_path) {
         eprintln!("Error: {:?}", e);
@@ -61,7 +64,6 @@ handle_client(mut stream: TcpStream)
 
         route_data(&header, &buffer[..]);
 
-        //file.write(&buffer[..bytes_read]).unwrap();
     }
 }
 

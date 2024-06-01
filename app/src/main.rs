@@ -71,7 +71,6 @@ encrypt(buffer: String) -> Vec<u8>
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
-    println!("buffer before encrypting: {:?}", buffer);
     let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
     
     match enc_len {
@@ -107,22 +106,24 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
     let buffer = buffer[1..].to_vec();
 
     thread::spawn( move || {
-        dbg_print(buffer.join(","), file!(), line!());
+        //dbg_print(buffer.join(","), file!(), line!());
         let enc = encrypt(buffer.join(","));
         tx.send(enc).unwrap();
     });
-    match rx.recv() {
-        Ok(v) => {
-            let msg: Vec<u8> = compress(v, 3);
-            let mut msg = [bufferheader, &msg].concat();
-            println!("{:?}", msg.len());
-            println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
-            send(msg);
-        },
-        Err(e) => {
-            write_error_log(e.to_string());
-        }
-    }
+    println!("{:?}", rx.recv().unwrap());
+    //match rx.recv() {
+    //    Ok(v) => {
+    //        println!("{:?}", &v); 
+    //        //let msg: Vec<u8> = compress(v, 3);
+    //        //let mut msg = [bufferheader, &msg].concat();
+    //        //println!("{:?}", msg.len());
+    //        //println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
+    //        //send(msg);
+    //    },
+    //    Err(e) => {
+    //        write_error_log(e.to_string());
+    //    }
+    //}
 
     Ok(())
 }
@@ -345,7 +346,6 @@ mod tests {
 
     #[test]
     fn test_get_tx_buffer() {
-        use crate::LogHandler;
         use crate::Log;
         use crate::Source;
         use crate::Destination;
