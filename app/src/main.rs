@@ -64,14 +64,12 @@ write_status_log(message: String)
 fn
 encrypt(buffer: String) -> Vec<u8>  
 {
-    let private_key = fs::read("private.pem").unwrap();
     let public_key = fs::read("public.pem").unwrap();
-
-    let pkey = Rsa::private_key_from_pem(&private_key).unwrap();
     let key = Rsa::public_key_from_pem(&public_key).unwrap();
 
     let mut buf = vec![0; key.size() as usize];
-    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::PKCS1);
+    //let mut buf: Vec<u8> = Vec::with_capacity(key.size() as usize);
+    let enc_len = key.public_encrypt(&buffer.as_bytes(), &mut buf, Padding::NONE);
     
     match enc_len {
         Ok(v) => {
@@ -101,29 +99,30 @@ send(buffer: Vec<u8>)
 fn 
 transmit(buffer: Vec<String>) -> std::io::Result<()> 
 {
+    dbg_print(buffer.join(","), file!(), line!());
     let (tx,rx) = std::sync::mpsc::sync_channel::<Vec<u8>>(1);
     let bufferheader = buffer[0].as_bytes();
     let buffer = buffer[1..].to_vec();
 
     thread::spawn( move || {
-        //dbg_print(buffer.join(","), file!(), line!());
         let enc = encrypt(buffer.join(","));
         tx.send(enc).unwrap();
     });
-    println!("{:?}", rx.recv().unwrap());
-    //match rx.recv() {
-    //    Ok(v) => {
-    //        println!("{:?}", &v); 
-    //        //let msg: Vec<u8> = compress(v, 3);
-    //        //let mut msg = [bufferheader, &msg].concat();
-    //        //println!("{:?}", msg.len());
-    //        //println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
-    //        //send(msg);
-    //    },
-    //    Err(e) => {
-    //        write_error_log(e.to_string());
-    //    }
-    //}
+    match rx.recv() {
+        Ok(v) => {
+            println!("{:?}:{}:{}", &v, file!(), line!()); // not encrypting the message, regardless
+                                                          // of size. see error.log while running.
+                                                          // use: tail -f -n0 error.log
+            let msg: Vec<u8> = compress(v, 3);
+            let mut msg = [bufferheader, &msg].concat();
+            println!("{:?}", msg.len());
+            println!("----\nmsg{:?}", std::str::from_utf8(&msg[..bufferheader.len()]).unwrap().to_string());
+            send(msg);
+        },
+        Err(e) => {
+            write_error_log(e.to_string());
+        }
+    }
 
     Ok(())
 }

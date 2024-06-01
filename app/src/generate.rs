@@ -10,7 +10,7 @@ main()
         std::process::exit(1);
     }
 
-    let rsa = Rsa::generate(2048).unwrap();
+    let rsa = Rsa::generate(4096).unwrap();
 
     std::fs::write(&args[1], &rsa.private_key_to_pem().unwrap()).unwrap();
     std::fs::write(&args[2], &rsa.public_key_to_pem().unwrap()).unwrap();
