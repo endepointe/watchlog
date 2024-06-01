@@ -380,7 +380,7 @@ mod tests {
         for d in data {
             println!("{:?}", d);
             let header = add_header(&"test1.log".to_string());
-            let b: String = header + &d;
+            let b: String = header + " " + &d;
             println!("{:?}", &b);
             println!("{:?}", b.as_bytes());
             send(b.as_bytes().to_vec()); 
