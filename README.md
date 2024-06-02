@@ -40,6 +40,8 @@ ExecStart=bin/bash -c 'path/to/watchlog/app/target/release/watchlog'
 #### Generate public and private keys:
 
 ```bash
+cd watchlog/app
+cargo build --bin generate --release
 ./target/release/generate <private_key_file> <public_key_file>
 ```
 
