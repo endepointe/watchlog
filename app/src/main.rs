@@ -133,7 +133,7 @@ collector(log: Log)
 
         let reader = io::BufReader::new(tail_stdout);
         
-        let cap = 5;//log.get_tx_buffer();
+        let cap = log.get_tx_buffer();
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
         let header = add_header(&path);

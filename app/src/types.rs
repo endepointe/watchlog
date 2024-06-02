@@ -37,9 +37,9 @@ impl Log {
         let mut bsize = 0;
         let val = self.tx_buffer.clone().unwrap_or("stream".to_string());
         match val.as_str() {
-            "1kb" => bsize = 1024,
-            "4kb" => bsize = 4096,
-            "1mb" => bsize = 1024 * 1024,
+            "1KB" => bsize = 1024,
+            "4KB" => bsize = 4096,
+            "1MB" => bsize = 1024 * 1024,
             _ => bsize = 0, // stream the data
         }
         bsize

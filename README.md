@@ -93,9 +93,9 @@ To set the log collection buffer, set the ```tx_buffer``` value in `config.json`
 
 | Interval | Description |
 | --- | --- |
-| 1kb | 1024 bytes |
-| 4kb | 4096 bytes |
-| 1mb | 1024 kilobytes |
+| 1KB | 1024 bytes |
+| 4KB | 4096 bytes |
+| 1MB | 1024 kilobytes |
 | stream | Stream the logs |
 
 The default value is 1kb.
