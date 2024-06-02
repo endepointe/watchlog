@@ -137,12 +137,16 @@ WantedBy=multi-user.target
 ## Usage:
 After installation and configuration, start the service using the following command:
 
+```bash
 systemctl enable watchlog.service
 systemctl start watchlog.service
+```
 
 To check the status of the service, use the following command:
 
+```bash
 systemctl status watchlog.service
+```
 
 Good to go.
 
