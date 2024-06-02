@@ -1,0 +1,10 @@
+[Unit]
+Description=WatchLog Service - WatchLog or Storage Controller
+
+[Service]
+ExecStart=bin/bash -c 'path/to/<insert_binary_name>'
+WorkingDirectory=path/to
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
