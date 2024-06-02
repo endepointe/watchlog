@@ -231,10 +231,21 @@ struct Log {
 </td>
 </tr>
 <tr>
+<td>Header</td>
 <td>Source</td>
 <td>Destination</td>
 </tr>
 <tr>
+<td>
+
+```rust
+
+struct Header {
+    name: String,
+    date: String,
+}
+```
+</td>
 <td>
 
 ```rust
