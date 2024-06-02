@@ -9,6 +9,42 @@
 
 ### Architecture
 
+```mermaid
+graph LR 
+A(ReadConfig) --> L1(path/to/syslog)
+A --> L2(path/to/auth.log)
+A --> L3(path/to/messages)
+A --> L4(path/to/secure)
+L1 --> W(WatchLog)
+L2 --> W
+L3 --> W
+L4 --> W
+W --> Col(Collector)
+Col --> W
+Col --> Enc(Encrypt)
+Enc --> Cmpr(Compress)
+Cmpr --> Tx(Transmit)
+Tx --> |purge| Col 
+Tx --> S[(StorageController)]
+``` 
+
+
+```mermaid
+graph LR
+S[(StorageController)] --> l1(logs/auth/)
+S --> l2(logs/syslog/)
+S --> l3(logs/messages/)
+S --> l4(logs/secure/)
+l1 --> h1(yyyy-mm-dd/hh-mm)
+l1 --> h2(yyyy-mm-dd/hh-mm)
+l2 --> h3(yyyy-mm-dd/hh-mm)
+l2 --> h4(yyyy-mm-dd/hh-mm)
+l3 --> h5(yyyy-mm-dd/hh-mm)
+l3 --> h6(yyyy-mm-dd/hh-mm)
+l4 --> h7(yyyy-mm-dd/hh-mm)
+l4 --> h8(yyyy-mm-dd/hh-mm)
+```
+
 
 ### Configuration
 To make changed to the systemd unit file:
@@ -101,46 +137,6 @@ struct Destination {
 </tr>
 </table>
 
-
-### Flow Chart
-
-General flow chart of the application:
-
-```mermaid
-graph LR 
-A(ReadConfig) --> L1(path/to/syslog)
-A --> L2(path/to/auth.log)
-A --> L3(path/to/messages)
-A --> L4(path/to/secure)
-L1 --> W(WatchLog)
-L2 --> W
-L3 --> W
-L4 --> W
-W --> Col(Collector)
-Col --> W
-Col --> Enc(Encrypt)
-Enc --> Cmpr(Compress)
-Cmpr --> Tx(Transmit)
-Tx --> |purge| Col 
-Tx --> S[(StorageController)]
-``` 
-
-
-```mermaid
-graph LR
-S[(StorageController)] --> l1(logs/auth/)
-S --> l2(logs/syslog/)
-S --> l3(logs/messages/)
-S --> l4(logs/secure/)
-l1 --> h1(yyyy-mm-dd/hh-mm)
-l1 --> h2(yyyy-mm-dd/hh-mm)
-l2 --> h3(yyyy-mm-dd/hh-mm)
-l2 --> h4(yyyy-mm-dd/hh-mm)
-l3 --> h5(yyyy-mm-dd/hh-mm)
-l3 --> h6(yyyy-mm-dd/hh-mm)
-l4 --> h7(yyyy-mm-dd/hh-mm)
-l4 --> h8(yyyy-mm-dd/hh-mm)
-```
 
 
 
