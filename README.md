@@ -88,9 +88,11 @@ To set up the logs to be collected, add desired log name(s) and path(s) to the `
             },
             "dst": {
                 "address": "..."
-            .
-            .
-            .
+                "port": "..."
+            },
+            ...
+            ...
+            ...
         }
     ]
 }
