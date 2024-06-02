@@ -1,6 +1,5 @@
 
 
-
 # WatchLog
 
 # Table of Contents:
@@ -29,25 +28,19 @@ cd watchlog/app
 cargo build --bin watchlog --release
 ```
 
-#### Running the client:
+## Configuration:
 
-To run the client, add the following to your systemd unit file:
+### Configuring the client:
+
+To enable the client to run on startup, add the following to your <a href="#Systemd-Unit-File">systemd unit file</a>:
 
 ```bash
 ExecStart=bin/bash -c 'path/to/watchlog/app/target/release/watchlog'
 ```
 
-#### Generate public and private keys:
+### Configuring the server:
 
-```bash
-cd watchlog/app
-cargo build --bin generate --release
-./target/release/generate <private_key_file> <public_key_file>
-```
-
-#### Running the server:
-
-Install the server binary on the server machine:
+Install the storage-controller binary onto the server machine:
 
 ```bash
 git clone https://github.com/endepointe/watchlog.git
@@ -55,14 +48,12 @@ cd watchlog/app
 cargo build --bin storage-controller --release
 ```
 
-To run the server, add the following to your systemd unit file:
+To enable the server to run on startup, add the following to your <a href="#Systemd-Unit-File">systemd unit file</a>:
+
 
 ```bash
 ExecStart=bin/bash -c 'path/to/watchlog/app/target/release/storage-controller'
 ```
-
-## Configuration:
-
 
 ### Setting up the logs:
 
@@ -88,6 +79,13 @@ To set up the logs to be collected, add desired log name(s) and path(s) to the `
 }
 ```
 
+### Generate public and private keys:
+
+```bash
+cd watchlog/app
+cargo build --bin generate --release
+./target/release/generate <private_key_file> <public_key_file>
+```
 ### Setting transmission buffer size:
 To set the log collection buffer, set the ```tx_buffer``` value in `config.json` to one of the following:
 
@@ -98,7 +96,7 @@ To set the log collection buffer, set the ```tx_buffer``` value in `config.json`
 | 1MB | 1024 kilobytes |
 | stream | Stream the logs |
 
-The default value is 1kb.
+The default value is 1KB.
 
 
 ### Systemd Unit File:
@@ -148,6 +146,26 @@ To check the status of the service, use the following command:
 
 ```bash
 systemctl status watchlog.service
+```
+
+To run the client without systemd, use the following command:
+
+```bash
+'./path/to/watchlog/app/target/release/watchlog'
+
+//or
+
+cargo run --bin watchlog 
+```
+
+To run the server without systemd, use the following command:
+
+```bash
+'./path/to/watchlog/app/target/release/storage-controller'
+
+//or
+
+cargo run --bin storage-controller
 ```
 
 Good to go.
