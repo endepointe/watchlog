@@ -232,4 +232,3 @@ struct Destination {
 </td>
 </tr>
 </table>
-
