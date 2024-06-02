@@ -74,6 +74,28 @@ To set the log collection buffer, set the ```tx_buffer``` value in `config.json`
 The default value is 1kb.
 
 
+### Setting up the logs:
+
+To set up the logs to be collected, add desired log name(s) and path(s) to the `config.json` file:
+
+```json
+{
+    "logs": [
+        {
+            "src": {
+                "name": "<log_name>",
+                "path": "path/to/log"
+            },
+            "dst": {
+                "address": "..."
+            .
+            .
+            .
+        }
+    ]
+}
+```
+
 ### Systemd Unit File:
 
 To make changes to the systemd unit file (Client and Server):
@@ -110,7 +132,7 @@ WantedBy=multi-user.target
 ```
 
 ## Usage:
-After installation, start the service using the following command:
+After installation and configuration, start the service using the following command:
 
 systemctl enable watchlog.service
 systemctl start watchlog.service
