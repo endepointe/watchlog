@@ -10,3 +10,6 @@ logs/
 error.log
 sources.log
 *.pem
+test1.log
+test2.log
+

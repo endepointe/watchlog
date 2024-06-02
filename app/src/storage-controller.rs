@@ -43,9 +43,14 @@ route_data(header: &Header, data: &[u8])
         eprintln!("Error: {:?}", e);
         std::process::exit(1);
     }
-
+    
     writeln!(file, "{}", header.date).unwrap();
-    writeln!(file, "{:?}\n", std::str::from_utf8(&data).unwrap()).unwrap();
+    let events: String = String::from_utf8((&data).to_vec()).unwrap();
+    let events: Vec<&str> = events.split(",").collect();
+    for event in events {
+        writeln!(file, "{}", event).unwrap();
+    }
+    writeln!(file, "{}", "").unwrap();// empty line
 }
 
 fn 
@@ -62,7 +67,7 @@ handle_client(mut stream: TcpStream)
 
     if data.len() > 0 {
         let mut header = String::new();
-        let mut i: usize = 1;
+        let mut i: usize = 1; // assert!(data.len() > 0);
         for byte in data[0].as_bytes() {
             if *byte == 0x7D {
                 i += 1;

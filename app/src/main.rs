@@ -133,7 +133,7 @@ collector(log: Log)
 
         let reader = io::BufReader::new(tail_stdout);
         
-        let cap = log.get_tx_buffer();
+        let cap = 5;//log.get_tx_buffer();
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
         let header = add_header(&path);
@@ -141,6 +141,10 @@ collector(log: Log)
 
         for line in reader.lines() {
             if let Ok(line) = line {
+                // todo: strip out commas, if any, from the line.
+                // The reason is to prevent the buffer from interpreting
+                // the comma as a delimiter. Only the commas in the vector
+                // created in the storage side should be interpreted as delimiters.
                 if line.len() + size < cap {
                     buffer.push(line.to_string());
                 } else {
