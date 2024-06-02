@@ -292,3 +292,8 @@ struct Destination {
 </td>
 </tr>
 </table>
+
+## License
+
+### <a href="Table-of-Contents">Back to top</a>
+
