@@ -294,6 +294,7 @@ struct Destination {
 </table>
 
 ## License
+GNU General Public License v3.0
 
 ### <a href="Table-of-Contents">Back to top</a>
 
