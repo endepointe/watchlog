@@ -61,18 +61,6 @@ ExecStart=bin/bash -c 'path/to/watchlog/app/target/release/storage-controller'
 
 ## Configuration:
 
-### Setting config.json:
-To set the log collection buffer, set the ```tx_buffer``` value in `config.json` to one of the following:
-
-| Interval | Description |
-| --- | --- |
-| 1kb | 1024 bytes |
-| 4kb | 4096 bytes |
-| 1mb | 1024 kilobytes |
-| stream | Stream the logs |
-
-The default value is 1kb.
-
 
 ### Setting up the logs:
 
@@ -97,6 +85,19 @@ To set up the logs to be collected, add desired log name(s) and path(s) to the `
     ]
 }
 ```
+
+### Setting transmission buffer size:
+To set the log collection buffer, set the ```tx_buffer``` value in `config.json` to one of the following:
+
+| Interval | Description |
+| --- | --- |
+| 1kb | 1024 bytes |
+| 4kb | 4096 bytes |
+| 1mb | 1024 kilobytes |
+| stream | Stream the logs |
+
+The default value is 1kb.
+
 
 ### Systemd Unit File:
 
