@@ -1,5 +1,4 @@
-# log-collection-documentation
-# Software Development Process README
+# Software Development Process - Before Team Dissolved 
 
 ## Table of Contents
 
