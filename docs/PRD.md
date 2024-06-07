@@ -102,7 +102,7 @@ the source of their logs and the central storage-controller.
 
 ## Visual Representations
 
-![](wiki/images/1.svg "Log Collection System")
+![](https://watchlog.wiki/#arch "Log Collection System")
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
