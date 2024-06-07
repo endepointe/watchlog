@@ -1,4 +1,4 @@
-# Software Development Process - Before Team Dissolved 
+# Software Development Process 
 
 ## Table of Contents
 
@@ -22,25 +22,20 @@ The overall goal is to create a seemless, organized, workflow process that allow
 contributors to collaborate efficiently.
 
 The software development process begins with ideation, where creative concepts
-are generated on the backlog, followed by iterative refinement, testing, and
-continuous enhancement, ultimately leading to the identification and
-implementation of the most optimal solution among the iterations.
+are generated as issues, followed by discussion, implementation, iterative refinement, and testing.
 
 ## Development Phases
 
 ### 1. Planning
-The backlog board serves as a dynamic space where ideas are generated, refined,
-and broken down into their sub-tasks. The over-arching ideas will start in the
-TODO section whose sub-tasks (if any) will be moved to the In-Progress section
-when defined. Team members contribute to discussions, prioritize features, and
-outline the scope of the task on the backlog board. The backlog board will be the
-central hub for refining concepts, setting milestones, and creating a transparent
-and organized planning process as the foundation of the project's development.
+The issues serrve as a space where ideas are generated, refined,
+and broken down into their sub-tasks. Team members contribute to discussions, prioritize features, and
+outline the scope of the task. 
+
+An optional backlog board will be available to refine concepts, set milestones, and create a transparent
+and organized planning process.
 
 ### 2. Communication and Collaboration
-The backlog board will serve as the central hub for project communication. Things
-of a personal, non-project related discussions such as scheduling, course
-meetings, etc, will be handled on Discord.
+The issues and optional backlog board will serve as a hub for project communication. 
 
 ### 3. Development
 The project will benefit from members iterating through several versions of code
@@ -62,8 +57,7 @@ If a discussion would better explain the code reason, provide a link as a commen
 instead.
 
 ### 6. Adjustment and Feedback
-The discussions about project direction and feature implementation will occur 
-on the backlog board. In this way, maintainers to the project can have a full
+The discussions about project direction and feature implementation will occur as issues or the optional backlog board. In this way, maintainers to the project can have a full
 view of the discussion history. Feedback regarding ideas is encouraged as this is
 the only way to have a discussion and reach an optimal solution.
 
@@ -73,17 +67,12 @@ Due to the team size, all members are encourage to collabarate in every section
 of the product. Repository admins are put in place to create stable development
 and feature-testing branches.
 
-As of now:
-- Jicxer is the frontend admin.
-- murchej is the server admin.
-- endepointe is the client admin.
-- khuynh2002 is the documentation admin.
+As of now, there is only one team member. As the project grows, the roles and
+responsibilities will be updated.
 
 ## Tools and Technologies
 
-The languages chosen for each repo may vary. For example, the client repository
-language will be written in Rust while the frontend repo may chose a stack that
-makes sense based on its own requirements.
+The project will be written in Rust. Additions to the project are not required to be written in rust if it makes sense based on requirements.
 
 Members should be comfortable moving between languages as requirements demand.
 
@@ -103,13 +92,11 @@ considered during discussion and implementation:
 2. Plan appropriate tests (security, performance, regression, user)
 3. Execute those tests
 4. Use the results of the test for further discussion
-5. Release (Major.Minor.Patch) 
-6. Repeat
+5. Repeat
 
 ## Project Timeline
 
-A stable version of the product will take 9 months. Within 6 months, a minor
-version should be available for further testing.
+A stable version of the product will take 9 months. 
 
 ## Risk Management
 
@@ -118,10 +105,6 @@ iterations, a solution-first approach can mitigate issues as they arise.
 
 ## Documentation
 
-The user documentation will be included in this repository, and there are plans
-to include it in either (readthedocs.io)[https://docs.readthedocs.io/] or another
-platform.
+The documentation will be included in this repository as a README.md file.
 
-The documentation for project development and maintenance will be included in the
-README of each corresponding repository within the organization.
 
