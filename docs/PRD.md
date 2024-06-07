@@ -21,7 +21,7 @@
 18. [Change Management](#change-management)
 19. [Evaluation](#evaluation)
 
----
+
 
 ## Problem Statement
 
@@ -29,7 +29,7 @@ Gathering data from arbitrary log sources should not be a time-consuming task.
 Blueteams, network admins, and anyone wanting to record and store the events 
 of a service should have an efficient, secure method of doing so.
 
----
+
 
 ## Goals and Objectives
 
@@ -40,21 +40,21 @@ Users will be able to establish a secure connection between
 the source of their logs and the central storage-controller.
 
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## User Type and Scenarios
 | **User**           | **Scenario** | **Priority** |
-|--------------------|--------------|--------------|
+|-----------------|--------------|--------------|
 | *Security Analyst* | As a security analyst, I want to be able to specify relevant log sources for my investigations. |  High   |
 | *IT Adminstrator*  | As an IT admin, I want an intuitive interface for configuring, initializing, and retrieving log data. | High | 
 | *Network Administrator* | As a Network admin, I want the retrieval of network-related logs to be supported for network analysis. | High |
 
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Functional Requirements
 
@@ -76,9 +76,9 @@ the source of their logs and the central storage-controller.
 5. **Destination Data Reception:**
     - Develop a directory structure to receive logs (date and time).
       
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Non-functional Requirements
 1. **Latency**
@@ -96,17 +96,17 @@ the source of their logs and the central storage-controller.
 6. **Installability (server/client components)**
     - Easy to perform, fast, and well explained through documentation 
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Visual Representations
 
 ![](wiki/images/arch.png "Log Collection System")
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## User Experience and Usability Plan
 
@@ -120,9 +120,9 @@ When they have successfully run the binary, log data will be fed to the storage-
 From the storage-controller server, the user will be able to interact with each log source, 
 download their data from the central server, and add/remove log sources.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Technical Architecture and Choices
 
@@ -134,26 +134,26 @@ operating systems and handle threading and async operations. Along with its
 platform versatility, Rust's *cargo* command line tool has options for testing 
 and documentation generation.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Timeline
 
 An MVP of this service should be up and running at month 3. This will give 4
 months for user testing/additional development.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Dependencies and Bottlenecks
 
 Team size
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Testing and Quality Assurance
 
@@ -173,17 +173,17 @@ Between now and the 7th month, code and methods will be tested on a regular basi
 5. Header is added to every log event 
 6. Transmission buffer is configurable
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## User Documentation and Support
 
 Linked documentation: https://github.com/endepointe/watchlog/tree/main 
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Versioning
 
@@ -194,18 +194,18 @@ Linked documentation: https://github.com/endepointe/watchlog/tree/main
 Stable versions will be available on the Minor versions due to feature
 availability.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Feasibility
 
 This will be a considerable amount of work. A minimal viable product is not past
 realistic expectations.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Innovative Features
 
@@ -214,30 +214,30 @@ What makes this product stand out is its availability on platforms. The service 
 provides could pave the way for innovative services due the product's core data
 collection service.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Stakeholder Alignment
 
 Stakeholder approves of overall project vision. 
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Change Management
 
 Release updates to software will be accompanied by a CHANGELOG.md file.
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
----
+
 
 ## Evaluation
 
 The success of this product will be determined by satisfying the defined 
 [testing conditions](#testing-and-quality-assurance).
 
-<a href="#table-of-contents" style="font-size: smaller;">back to top</a>
+[back to top](#table-of-contents)
 
