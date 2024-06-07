@@ -110,28 +110,15 @@ the source of their logs and the central storage-controller.
 
 ## User Experience and Usability Plan
 
-A first-time user will navigate to the product page (frontend repo) read about
+A first-time user will navigate to the repo, read about
 the product software, and make a decision about whether this service fits their
-needs. If their needs can be met with service provided, they will create an
-account and be redirected to their account dashboard.
+needs. If their needs can be met with service provided, they will install the software.
 
-From their account dashboard, they will be able to:
-- download their certificate and private key
-- download the sofware along with the license
-- copy their one-time-password (OTP) information (important)
-- view existing log sources (not the data) being collected
+When that process is complete, they will run the binary. 
 
-The user will install the software (Tauri app) onto their machine.
-
-When that process is complete, they will run the binary (doubleclick/cli) and be
-presented with a login screen where they will enter their OTP (or user/pass).
-
-When they have successfully authenticated, full visibility of log data will be 
-available. The user will be able to interact with each log source, download their
-data from the central server, and add/remove log sources.
-
-We will make every attempt to ensure compatibility with users with disabilities
-as the project progresses.
+When they have successfully run the binary, log data will be fed to the storage-controller.
+From the storage-controller server, the user will be able to interact with each log source, 
+download their data from the central server, and add/remove log sources.
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
@@ -139,23 +126,13 @@ as the project progresses.
 
 ## Technical Architecture and Choices
 
-The service running on the client machine will be written in Rust. The interface 
-for client machines will be written using Tauri, another Rust-based project.
+The service running on the client and server machines will be written in Rust. 
+A command-line interface will be available for client and server.
 
 The reason for Rust being its ability to write and compile to multiple 
 operating systems and handle threading and async operations. Along with its 
 platform versatility, Rust's *cargo* command line tool has options for testing 
 and documentation generation.
-
-Tauri makes GUI creation simple. Given its cross-platform compatibility, due to
-it being written in Rust, just makes sense.
-
-The service running on the server will be a mix of languages, such as Terraform,
-shell, Python, and Rust if needed. A relational database will be used, with
-options left open to the user for integration with ElasticSearch if they choose.
-
-The website provides the user signup, software distribution, and documentation
-will use Svelte. 
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
@@ -172,7 +149,7 @@ months for user testing/additional development.
 
 ## Dependencies and Bottlenecks
 
-Still todo but: team size, creating the in-house CA, using Rust
+Team size
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
@@ -181,7 +158,7 @@ Still todo but: team size, creating the in-house CA, using Rust
 ## Testing and Quality Assurance
 
 Between now and the 7th month, code and methods will be tested on a regular basis
-as outlined in the SDP document [PROVIDE LINK TO SDP README].
+as outlined in the SDP document.
 
 ### Test Conditions to be met:
 
