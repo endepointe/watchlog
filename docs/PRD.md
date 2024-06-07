@@ -157,82 +157,29 @@ Team size
 
 ## Testing and Quality Assurance
 
-Between now and the 7th month, code and methods will be tested on a regular basis
-as outlined in the SDP document.
+Between now and the 7th month, code and methods will be tested on a regular basis.
 
 ### Test Conditions to be met:
 
-#### API Repo:
-- **All API endpoints:**
-    1. Protect API endpoints through access verification
+#### Storage-Controller:
+1. Setup directory structure for log storage
+2. Load test server with log sources
 
-- **Public Key Infrastructure API endpoint must handle the following:**
-    1. Issue certificates
-    2. Verify the identity of the requesting user requesting a digital signature 
-    3. Revoke certificates of specific users
-    4. Renew certificates of specific users
-    5. Key Pair storage and retrieval
-    6. Certificate policy (cert lifetime, validation, key length reqs, etc.)
-    7. Follows industry standards (x509, bitlength, cipher type, etc.)
-    8. PKI audit logging
-    9. PKI hierarchy (masterkey -> prodkey1 -> [prodkey2, ..., prodkeyN])
-    10. Failure Recovery (offline masterkey) 
-
-- **User management api endpoints must handle the following:**
-    1. Create, Read, Update, and Delete users
-    2. Account management (signin/out/delete,cert retrieval/renewal, etc.)
-    3. Grant or revoke user certification.
-    4. Whitelist specific IP addresses.
-    5. Key-value to certificate matching for user authentication.
-
-- **Dashboard api endpoints must handle the following:**
-    1. Data visualization 
-
-- **Software distribution api endpoints must handle the following:**
-    1. Provide links to download software for existing platforms
-
-#### Frontend Repo:
-1. Provide the interface to interact with the API
-2. Device agnostic
-3. Contains links to User and Developer documentation
-
-#### Server Repo:
-1. Create a TLS connection with Client
-2. Create a database specific to the user
-3. Each user database has a table for each input log source
-4. Delete database on user deletion
-5. Automate the initialization of Server Instance
-
-#### Client Repo:
-1. Create a TLS connection with Server 
-2. Command line and Graphical User Interface to configure:
-    - the destination address
-    - certificate (supplied from API repo)
-    - path(s) to log source(s)
-
-#### Documentation Repo:
-1. Provides setup instructions for:
-    - account management
-    - certificate management
-    - client-server connection establishment
-2. Establish a [Changelog](SUPPLY LINK TO CHANGELOG)
-3. Continuous Documentation Deployment here: https://securitylogminer-doc-repo.readthedocs.io/en/latest/
+#### Client:
+1. Establish a connection with the server
+2. Send log data to the server
+3. Handle errors via logging 
+4. Load test client with log sources
+5. Header is added to every log event 
+6. Transmission buffer is configurable
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
 ---
 
 ## User Documentation and Support
-User documentation will be written to satisfy the requirements of the 
-[documentation requirement section](#documentation-repo)
 
-Support for this project will come as new maintainers are added to the
-organization. Since this is an open-source project, forks will be possible under
-the allowed [license](PROVIDE LINK TO SOFTWARE LICENSE).
-
-Documentation is setup and hosted on Read The Docs. This type of integration allows for continuous updates to the documentation, whenever a development change occurs. Whenever updates are pushed to our documentation repository on GitHub, Read the Docs automatically rebuilds the documentation, ensuring that users always have access to the most current information. 
-
-Linked documentation: https://securitylogminer-doc-repo.readthedocs.io/en/latest/
+Linked documentation: https://github.com/endepointe/watchlog/tree/main 
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
@@ -253,8 +200,7 @@ availability.
 
 ## Feasibility
 
-The initial team tasked with this project is capable but we recognize that this
-will be a considerable amount of work. A minimal viable product is not past
+This will be a considerable amount of work. A minimal viable product is not past
 realistic expectations.
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
@@ -282,8 +228,7 @@ Stakeholder approves of overall project vision.
 
 ## Change Management
 
-Updates to software will be accompanied by a 
-[Changelog](SUPPLY LINK TO CHANGELOG).
+Release updates to software will be accompanied by a CHANGELOG.md file.
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
