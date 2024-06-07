@@ -102,7 +102,7 @@ the source of their logs and the central storage-controller.
 
 ## Visual Representations
 
-![](wiki/images/arch.svg "Log Collection System")
+![](wiki/images/arch.png "Log Collection System")
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
