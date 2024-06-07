@@ -113,6 +113,9 @@ At a minimum, the user documentation should include the following:
 ## Data Management
 
 ### Client Data
+
+Data types defined here: [https://github.com/endepointe/watchlog/blob/main/README.md#data-types](https://github.com/endepointe/watchlog/blob/main/README.md#data-types)
+
 Incoming log data will be defined using the configuration file located on the
 client. 
 
