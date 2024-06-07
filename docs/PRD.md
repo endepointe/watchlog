@@ -1,4 +1,4 @@
-# Product Requirements Document - Before Team Dissolved
+# Product Requirements Document
 
 ## Table of Contents
 
