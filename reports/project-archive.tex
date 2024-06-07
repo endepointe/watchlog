@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={black},
+    citecolor={black},
+    urlcolor={black}
+}
+
+\title{Project Archive: \underline{Watch-Log}}
+\author{Alvin Johns}
+\date{\today}
+
+\makeatletter
+\renewcommand{\maketitle}{
+    \begin{titlepage}
+        \centering
+        \vspace*{\fill}
+        \large \textbf{\@title} \\
+        \vspace{0.5cm}
+        \normalsize \textbf{\@author}\\
+        \vspace{0.5cm}
+        \normalsize \textbf{\@date} \\
+        \vspace*{\fill}
+    \end{titlepage}
+}
+
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\raggedright
+
+\section{Foreward: Release Notes}
+
+\underline{The following is a list of todo's:}
+
+\begin{itemize}[label=+]
+    \item{Encrypt the data before sending to compression}
+    \item{Compress the data before sending to the storage-controller}
+    \item{Enable TLS + Certificates and Key Rotation Playbook}
+    \item{Utilize the available signal handlers}
+    \item{Create a TUI/GUI for the user}
+    \item{Windows support}
+\end{itemize}
+
+\subsection{Encrypt the data before sending to compression}
+
+In src/main.rs:encrypt(...), the openssl library handles encryption. It may be helpful to roll your own encryption as either a learning experience or to avoid the overhead of the openssl library. If you choose to use the openssl library, make sure to statically link the library to the binary. This has been set by using the 'vendored' option in the Cargo.toml file.
+
+\subsection{Compress the data before sending to the storage-controller}
+
+As with encryption, you can roll your own or use an existing library.
+
+\subsection{Enable TLS + Certificates and Key Rotation Playbook}
+
+Provide TLS support between watchlog client and storage-controller. Incorporate certificates and a key rotation playbook.
+
+\subsection{Utilize the available signal handlers}
+
+The signal handlers found in src/main.rs:unix\_app() provide the ability for the application to be controlled from within the threads. In src/main.rs:watch\_logs(), the terminate\_flag can be passed into the src/main.rs:collector(...) function to provide better control of logs and the overall application.
+
+\subsection{Create a TUI/GUI for the user}
+
+The current application is a command-line application. A TUI/GUI would provide a better user experience. The TUI/GUI could be created using the 'ratatui' library. If creating a GUI, Tauri is a good option.\vspace{0.25cm}
+
+\href{https://ratatui.rs/}{Ratatui: https://ratatui.rs/}
+
+\href{https://tauri.app/}{Tauri: https://tauri.app/}
+
+\subsection{Windows support}
+
+Knowledge of the Windows API is required to port the application to Windows. The application is currently only supported on Unix-based systems. This is a great opportunity to extend the user/customer base.
+
+\newpage
+
+\section{Personnel and Legacy}
+
+\subsection{Who requested the project?}
+
+This project was requested as part of the Oregon State University Capstone program. The staff requested the project to provide an alternative solution for capturing system logs.
+
+\subsection{Why was it requested?}
+
+This project demonstrates the importance of maintaining observability in a system while reducing the overhead of the tools used to provide that observability.
+
+\subsection{Who was/were the project partner(s)?}
+
+The project partners were: Ivan Chan, Joseph Murche, Kevin Huynh, and Alvin Johns.\vspace{0.25cm}
+
+After a series of unfortunate events, I, Alvin Johns(endepointe), felt the need to move forward with the project in a separate repository. The project partners were notified of the move and were given the opportunity to continue with the project, or work on another project.\vspace{0.25cm}
+
+Link: \url{https://github.com/SecurityLogMiner/log-collection-client}
+
+\subsection{Who are the members of your team?}
+
+The members of the WatchLog team are: Alvin Johns and, hopefully, future team members.
+
+\subsection{What were the roles of the project partner(s)?}
+
+Alvin Johns: Project Manager, Developer, and Documenter
+
+\newpage
+
+\section{PRD/SDA/SDP Documents}
+
+\begin{itemize}
+    \item PRD README: \url{https://github.com/endepointe/watchlog/blob/main/docs/PRD.md}
+    \item SDA README: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDA.md}
+    \item SDP README: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDP.md}
+\end{itemize}
+
+\newpage
+
+\section{User Guide Document}
+
+\newpage
+
+\section{Technical Resources}
+
+\newpage
+
+\section{Future Direction}
+
+
+\end{document}
+

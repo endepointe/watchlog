@@ -34,10 +34,14 @@ of a service should have an efficient, secure method of doing so.
 ## Goals and Objectives
 
 A stream of log events, provided by the client endpoint, will be packaged and
-transported to a central server for storage and retrieval. 
+transported to a central cloud server for storage and retrieval. 
 
-Users will be able to establish a secure connection between
-the source of their logs and the central storage-controller.
+Whether on a windows or \*Nix-based endpoint, a user will be able to create an
+account, receive proper credentials, and establish a secure connection between
+the source of their logs and the central data-storage server.
+
+Compatibility with ElasticSearch should be available to the user that will
+complement the service the central storage server provides.
 
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
@@ -60,10 +64,11 @@ the source of their logs and the central storage-controller.
 
 1. **Data Collection:**
     - The system should be able to collect data from the specified source.
+    - Specify supported data formats for efficient data parsing.
 
 2. **TLS Connection Establishment:**
     - Implement TLS over TCP socket creation and management.
-    - Create, Update, and Revoke certificates with an CA manager
+    - Create, Update, and Revoke certificates with an in-house CA manager
 
 3. **Data Processing and Serialization:**
     - The collected data should be processed and serialized for transmission over the TCP connection.
@@ -74,8 +79,15 @@ the source of their logs and the central storage-controller.
     - Implement system monitoring and alerting to reduce downtime during system degradation
 
 5. **Destination Data Reception:**
-    - Develop a directory structure to receive logs (date and time).
+    - Develop a system of database I/O.
+    - Create a procedure to integrate with ElasticSearch.
       
+6. **User Authentication:**
+    - Whitelist specific user IP addresses.
+    - Key-value store mapping users to certificates.
+    - Mechanism for revoking certificates if needed.
+    - Create keys for the user to match certificate values.
+
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
 ---
@@ -87,12 +99,13 @@ the source of their logs and the central storage-controller.
 2. **Recovery**
     - Failure recovery without data loss
 3. **Compatibility and Compliance**
+    - WCAG compliant
     - Data protection compliant
-    - Device and system agnostic (Windows, MacOS, Linux)
+    - Device and system agnostic (windows/\*nix)
 4. **Documentation**
     - User and developer documentation
 5. **Availability and Maintenance**
-    - Pull requests and issues addressed by maintainers within 24 hours
+    - 24/7 availability, except during scheduled maintenance periods
 6. **Installability (server/client components)**
     - Easy to perform, fast, and well explained through documentation 
 
@@ -102,7 +115,7 @@ the source of their logs and the central storage-controller.
 
 ## Visual Representations
 
-![](wiki/images/1.svg "Log Collection System")
+![](log-collection-visual.png "Log Collection System")
 
 <a href="#table-of-contents" style="font-size: smaller;">back to top</a>
 
