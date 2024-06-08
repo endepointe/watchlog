@@ -103,8 +103,9 @@ The default value is 1KB.
 
 To make changes to the systemd unit file (Client and Server):
 
-Make a copy of the `/etc/systemd/system/watchlog.service` file. The following is an example of the default systemd unit file for a service that runs the watchlog service:
+Make a copy of the `/etc/systemd/system/watchlog.service` file. Save the service file in the '/etc/systemd/system/' directory (unix only).
 
+The following is an example of the default systemd unit file for a service that runs the watchlog service:
 
 #### Client:
 ```bash

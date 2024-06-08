@@ -27,7 +27,7 @@ are generated as issues, followed by discussion, implementation, iterative refin
 ## Development Phases
 
 ### 1. Planning
-The issues serrve as a space where ideas are generated, refined,
+The issues serve as a space where ideas are generated, refined,
 and broken down into their sub-tasks. Team members contribute to discussions, prioritize features, and
 outline the scope of the task. 
 
