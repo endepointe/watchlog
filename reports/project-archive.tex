@@ -10,7 +10,8 @@
     urlcolor={black}
 }
 
-\title{Project Archive: \underline{Watch-Log}}
+\title{Project Archive: \vspace{0.25cm} \\
+\underline{\url{https://github.com/endepointe/watchlog/tree/main}}}
 \author{Alvin Johns}
 \date{\today}
 
@@ -76,9 +77,6 @@ The signal handlers found in src/main.rs:unix\_app() provide the ability for the
 
 The current application is a command-line application. A TUI/GUI would provide a better user experience. The TUI/GUI could be created using the 'ratatui' library. If creating a GUI, Tauri is a good option.\vspace{0.25cm}
 
-\href{https://ratatui.rs/}{Ratatui: https://ratatui.rs/}
-
-\href{https://tauri.app/}{Tauri: https://tauri.app/}
 
 \subsection{Windows support}
 
@@ -120,23 +118,51 @@ Alvin Johns: Project Manager, Developer, and Documenter
 
 \section{PRD/SDA/SDP Documents}
 
-\begin{itemize}
+\begin{itemize}[label=]
     \item PRD README: \url{https://github.com/endepointe/watchlog/blob/main/docs/PRD.md}
+    \item PRD PDF: \url{https://github.com/endepointe/watchlog/blob/main/docs/PRD.pdf}
     \item SDA README: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDA.md}
+    \item SDA PDF: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDA.pdf}
     \item SDP README: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDP.md}
+    \item SDP PDF: \url{https://github.com/endepointe/watchlog/blob/main/docs/SDP.pdf}
 \end{itemize}
 
-\newpage
 
 \section{User Guide Document}
 
-\newpage
+\begin{itemize}
+    \item User Guide README: \url{https://github.com/endepointe/watchlog/blob/main/README.md}
+\end{itemize}
+
 
 \section{Technical Resources}
 
-\newpage
+\underline{Building a TUI or GUI:}\vspace{0.25cm}
+
+Ratatui: \url{https://ratatui.rs/}
+
+Tauri: \url{https://tauri.app/}\vspace{0.25cm}
+
+\underline{Building dashboards:}\vspace{0.25cm}
+
+Wazuh: \url{https://wazuh.com/}
+
+Wazuh Query Language (WQL): \url{https://documentation.wazuh.com/current/user-manual/wazuh-dashboard/queries.html}
+
+Elastic: \url{https://www.elastic.co/}
+
+Kibana Query Language (KQL): \url{https://www.elastic.co/guide/en/kibana/current/introduction.html}
+
+Vector: \url{https://vector.dev/}\vspace{0.25cm}
+
+\underline{Building a Windows application with Rust:}\vspace{0.25cm}
+
+\url{https://learn.microsoft.com/en-us/windows/dev-environment/rust/rust-for-windows}
+
 
 \section{Future Direction}
+
+Given that the base branch routes event data in plaintext (or encrypted) to the storage-controller, there is an opportunity to ciphon the data into an analytics module. This module could serve as the foundation for building a dashboard, making use of existing query languages (KQL/WQL) or perhaps building a custom one. Detection of abnormal behavior could generate alerts, notifying the appropriate users from which that event originated from.
 
 
 \end{document}
