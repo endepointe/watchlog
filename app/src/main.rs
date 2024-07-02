@@ -14,6 +14,7 @@ use std::thread;
 use std::process::{Command, Stdio};
 use serde::Deserialize;
 use serde::Serialize;
+use std::net::IpAddr;
 
 use openssl::encrypt::{Encrypter, Decrypter};
 use openssl::rsa::{Rsa, Padding};
@@ -26,12 +27,14 @@ dbg_print(value: String, file: &str, line: u32)
 }
 
 fn
-add_header(name: &String) -> String 
+add_header(name: &String, ip: Ipv4Addr) -> String 
 {
+    dbg_print(ip., file!(), line!());
     let n = Path::new(name).file_name().unwrap().to_str().unwrap();
     let header = Header {
         name: String::from(n),
         date: format_date(),
+        src_address: "",
     };
     let header = serde_json::to_string(&header).unwrap();
     header
@@ -121,8 +124,8 @@ transmit(buffer: Vec<String>) -> std::io::Result<()>
 fn 
 collector(log: Log) 
 {
-
     let path = log.get_source_path();
+    let source_address = log.get_source_address();
 
     thread::spawn(move || {
         let mut tail_process = Command::new("tail")
@@ -151,7 +154,7 @@ collector(log: Log)
                     let b = buffer.to_vec();
                     transmit(b);                    
                     buffer.clear();
-                    let header = add_header(&path);
+                    let header = add_header(&path, source_address);
                     buffer.push(header);
                     buffer.push(line.to_string());
                     size = 0;
@@ -189,7 +192,6 @@ watch_logs() -> Arc<Mutex<bool>>
     }
     terminate_flag
 }
-
 
 fn 
 unix_app() 

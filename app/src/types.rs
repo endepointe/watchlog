@@ -1,12 +1,13 @@
 #![allow(unused_imports)]
 use serde::Deserialize;
 use serde::Serialize;
-use std::net::Ipv4Addr;
+use std::net::IpAddr;
 
 #[derive(Debug,Deserialize)]
 pub struct 
 Source 
 {
+    pub address: IpAddr,
     pub name: String,
     pub path: String
 }
@@ -16,7 +17,7 @@ Source
 pub struct 
 Destination 
 {
-    pub address: Ipv4Addr,
+    pub address: IpAddr,
     pub port: u16
 }
 
@@ -44,10 +45,14 @@ impl Log {
         }
         bsize
     }
+    pub fn get_source_address(&self) -> IpAddr {
+
+        self.source.address
+    }
     pub fn get_source_path(&self) -> String {
         self.source.path.to_string()
     }
-    pub fn get_destination_address(&self) -> Ipv4Addr {
+    pub fn get_destination_address(&self) -> IpAddr {
         self.destination.address
     } 
 }

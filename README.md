@@ -276,6 +276,7 @@ struct Header {
 ```rust
 
 struct Source {
+    address: IpV4Addr or IpV6Addr,
     name: String,
     path: String,
 }
