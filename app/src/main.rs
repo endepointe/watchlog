@@ -15,10 +15,13 @@ use std::process::{Command, Stdio};
 use serde::Deserialize;
 use serde::Serialize;
 use std::net::IpAddr;
+use tokio;
 
 use openssl::encrypt::{Encrypter, Decrypter};
 use openssl::rsa::{Rsa, Padding};
 use openssl::pkey::PKey;
+
+use external_ip;
 
 fn 
 dbg_print(value: String, file: &str, line: u32) 
@@ -27,14 +30,13 @@ dbg_print(value: String, file: &str, line: u32)
 }
 
 fn
-add_header(name: &String, ip: Ipv4Addr) -> String 
+add_header(name: &String, ip: &String) -> String 
 {
-    dbg_print(ip., file!(), line!());
     let n = Path::new(name).file_name().unwrap().to_str().unwrap();
     let header = Header {
         name: String::from(n),
         date: format_date(),
-        src_address: "",
+        src: String::from(ip),
     };
     let header = serde_json::to_string(&header).unwrap();
     header
@@ -139,7 +141,7 @@ collector(log: Log)
         let cap = log.get_tx_buffer();
         let mut buffer: Vec<String> = Vec::with_capacity(cap);
         let mut size = 0;
-        let header = add_header(&path);
+        let header = add_header(&path, &source_address.to_string());
         buffer.push(header);
 
         for line in reader.lines() {
@@ -154,7 +156,7 @@ collector(log: Log)
                     let b = buffer.to_vec();
                     transmit(b);                    
                     buffer.clear();
-                    let header = add_header(&path, source_address);
+                    let header = add_header(&path, &source_address.to_string());
                     buffer.push(header);
                     buffer.push(line.to_string());
                     size = 0;
@@ -174,9 +176,17 @@ read_config() -> Config
     let mut file = std::fs::File::open("config.json").unwrap();
     let mut buffer = String::new();
     file.read_to_string(&mut buffer).unwrap();
-    let config : Config = serde_json::from_str(&buffer).unwrap();
+    let config : Result<Config, _> = serde_json::from_str(&buffer);
 
-    config
+    match config {
+        Ok(v) => {
+            return v;
+        },
+        Err(e) => {
+            write_error_log(e.to_string());
+            std::process::exit(1);
+        }
+    }
 }
 
 fn 
@@ -238,7 +248,8 @@ unix_app()
 }
 
 
-fn 
+#[tokio::main]
+async fn 
 main() 
 {
     if  cfg!(unix) {

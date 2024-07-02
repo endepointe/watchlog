@@ -44,7 +44,7 @@ route_data(header: &Header, data: &[u8])
         std::process::exit(1);
     }
     
-    writeln!(file, "{}", header.date).unwrap();
+    writeln!(file, "{}", format!("DATE: {} SRC: {}", header.date, header.src)).unwrap();
     let events: String = String::from_utf8((&data).to_vec()).unwrap();
     let events: Vec<&str> = events.split(",").collect();
     for event in events {

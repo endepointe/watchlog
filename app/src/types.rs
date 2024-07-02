@@ -1,13 +1,14 @@
 #![allow(unused_imports)]
 use serde::Deserialize;
 use serde::Serialize;
+use external_ip;
+use futures::executor::block_on;
 use std::net::IpAddr;
 
 #[derive(Debug,Deserialize)]
 pub struct 
 Source 
 {
-    pub address: IpAddr,
     pub name: String,
     pub path: String
 }
@@ -46,8 +47,17 @@ impl Log {
         bsize
     }
     pub fn get_source_address(&self) -> IpAddr {
-
-        self.source.address
+        let ip = external_ip::get_ipv4();
+        let value = block_on(ip);
+        match value {
+            Some(value) => {
+                return std::net::IpAddr::V4(value);
+            },
+            None => { 
+                eprintln!("Could not get the IP address."); 
+                std::process::exit(1);
+            },
+        }
     }
     pub fn get_source_path(&self) -> String {
         self.source.path.to_string()
@@ -84,5 +94,6 @@ Header
 {
     pub name: String,
     pub date: String,
+    pub src: String,
 }
 
